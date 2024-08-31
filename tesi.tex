@@ -1,0 +1,37 @@
+\documentclass[12pt,a4paper]{report}
+
+% =============== PACKAGES =================
+% \usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% \usepackage{float}
+\usepackage{hyperref}
+\usepackage[italian]{babel}
+\usepackage{lipsum}
+\usepackage{geometry}
+\usepackage{setspace}
+
+% =============== GENERAL SETTINGS =========
+% \geometry{a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm}
+
+% \setcounter{tocdepth}{4} % insert paragraph in toc
+\pagestyle{headings}
+
+\graphicspath{{images/}}
+
+%================ FRONT PAGE ==============
+\title{Tesi}
+\author{Emanuele Manca}
+% \date{5 August 2024}
+\date{\today}
+
+% =========================================
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% Chapter
+\include{chapters/introduzione.tex}
+
+\end{document}
