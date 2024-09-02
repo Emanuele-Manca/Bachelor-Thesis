@@ -2,6 +2,8 @@
 % col: 20
 \chapter{Introduzione}
 
+Di seguito si descrivono le tecnologie usate e i concetti base che è necessario conoscere.
+
 \section{F1TENTH}
 F1TENTH è una community internazionale di ricercatori, ingegneri e appassionati di sistemi autonomi
 che organizza competizioni di corsa di macchinine con la peculiare caratteristica
@@ -14,14 +16,14 @@ di essere \textit{un decimo} di quelle di F1, da cui il nome.
 Oltre a questo, promuove la ricerca nell'ambito della guida autonoma
 e altri campi tra cui reinforcement learning, sistemi di comunicazione e robotica;
 offre, inoltre, corsi gratuiti online e una infrastuttura per imparare a costruire l'auto da corsa
-e sviluppare il software necessario per farla gareggiare. % TODO: \cite{f1tenth}
+e sviluppare il software necessario per farla gareggiare. \cite{ftenth-web}
 
 La community è stata fondata all'Università della Pennsylvania nel 2016 ma ha iniziato rapidamente
 collaborazioni con altre istituzioni e università in tutto il mondo~--~in Italia, alla data di stesura, solo
 con l'Università degli Studi di Modena e Reggio Emilia.
 
 \paragraph{I corsi}
-Il percorso di apprendimento, che ha materiale per un semestre circa
+Il percorso di apprendimento, che ha materiale per un semestre circa,
 % TODO: \footnote{https://f1tenth.org/learn.html},
 raggruppa le lezioni in moduli e li integra con altrettanti laboratori guidati
 su cui poter applicare le nozioni e algoritmi imparati.
@@ -30,24 +32,34 @@ su cui poter applicare le nozioni e algoritmi imparati.
 % \begin{minipage}{\textwidth}
 \noindent I moduli si raggruppano per tipologia di argomento trattato:
 \begin{itemize}
-	%TODO: breve descrizione dei contenuti
-	\item \textit{Modulo A} -- Introduzione a Robot Operating System (ROS) e \\
-	      all'ambiente simulatore di F1TENTH gym;
-	\item \textit{Modulo B} -- Metodi reattivi e dinamiche del veicolo
-	\item \textit{Modulo C} -- Mapping \& Localization: SLAM e Particle Filter;
-	\item \textit{Modulo D} -- Planning \& Control: Pure Pursuit e RRT;
-	\item \textit{Modulo E} -- Vision
-	\item \textit{Modulo F} -- Argomenti speciali: \textit{Raceline Optimization}, MPC
-	\item \textit{Modulo G} -- Gareggiare
+	\item \textit{Modulo A} -- Introduzione a \hyperref[sec:ros]{ROS} e all'ambiente simulatore di \hyperref[par:gym]{F1TENTH~gym};
+	\item \textit{Modulo B} -- Metodi reattivi e dinamiche del veicolo: \\
+	      Descrive la modellazione delle dinamiche fisiche di un veicolo e presenta algoritmi di navigazione
+	      reattivi come \textit{PID Control} e \textit{Wall following};
+	\item \textit{Modulo C} -- Mapping \& Localization: SLAM e Particle Filter:\\
+	      Introduzione alla stima dello stato, filtro di Bayes e varianti come Particle filter, uso di
+	      algoritmi basati su filtri per la localizzazione del robot data una mappa, algoritmi localizzazione e
+	      di modellazione dell'ambiente come SLAM;
+	\item \textit{Modulo D} -- Planning \& Control: Pure Pursuit e RRT:\\
+	      Descrizione dello stack di pianificazione e controllo di un veicolo autonomo, algortimo di
+	      \textit{path tracking} Pure Pursuit basato sulla dinamica del veicolo, introduzione ai
+	      \textit{local planner} e algoritmi come RRT, spline e clotoidi per descrivere un percorso,
+	      State lattice planner, Graph based planner;
+	\item \textit{Modulo E} -- Vision:\\
+	      Introduzione a Classical Perception, differenze hardware, stima della distanza, visual SLAM,
+	      percezione basata su ML, object detection;
+	\item \textit{Modulo F} -- Argomenti speciali: \textit{Raceline Optimization}, MPC:\\
+	      Ottimizzazione del percorso di gara, Model Predictive Control e Moral Decision Making;
+	\item \textit{Modulo G} -- Applicazione delle tecnologie descritte su gara simulata;
 \end{itemize}
 % \end{minipage} \\
 
-\noindent Ai fini dell'obiettivo di questa tesi, si è preferito non approfondire il Modulo E,
-oltre al fatto che si rendeva
-necessario l'uso fisico di hardware di cui non si aveva accesso,
+\noindent Ai fini dell'obiettivo di questa tesi si è preferito non approfondire il Modulo E,
+in quanto si rendeva necessario l'uso fisico di hardware di cui non si aveva accesso,
 ovvero l'auto e soprattutto sensori di visione come telecamere e LiDAr.
 
 \paragraph{F1TENTH gym}
+\label{par:gym}
 % TODO: da rivedere
 % https://docs.google.com/presentation/d/1zfzzjVTbXNIZ75BFtGEwQBJRHlY95VKkFQjJhYfznpI/edit#slide=id.g1cca33b1c19_0_3213
 La community sviluppa e mantiene un simulatore open-source specifico per F1TENTH
@@ -58,8 +70,9 @@ Il simulatore definisce la dinamica del veicolo in modo tale da avere una simula
 più reale possibile % Sim2Real problem
 % e grazie a ROS e rviz (che sta per ROS Visualizer)
 
-\subsection{Laboratori}
-% TODO: parlare dei laboratori svolti
+% TODO: parlare dei laboratori svolti?
+% \subsection{Laboratori}
+
 
 % ================== Autonomous Driving Pipeline =======================
 \section{Autonomous Driving Pipeline}
@@ -73,11 +86,11 @@ più specifici e in modo tale che composti insieme risultino nella soluzione del
 in cui il prodotto di una fase è input della successiva; si indentificano in ordine tre fasi:
 \begin{enumerate}
 	\item \textbf{Perception} Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a se,
-	      ci si localizza nella mappa e si indentificano eventuali ostacoli o gareggianti
+	      ci si localizza nella mappa e si indentificano eventuali ostacoli o gareggianti;
 	\item \textbf{Planning} Stando ai dati generati nella fase precedente,
-	      si determinano quali saranno le \emph{mosse future} seguendo delle policy prescritte
+	      si determinano quali saranno le \emph{mosse future} seguendo delle policy prescritte;
 	\item \textbf{Control} Si generano dei comandi di angolo di sterzata e velocità per attuare le scelte
-	      determinate nella fase precedente
+	      determinate nella fase precedente.
 \end{enumerate}
 
 L'input per la prima fase (\textit{Perception}) e l'ouput dell'ultima (\textit{Control})
@@ -103,11 +116,12 @@ Analizziamo più nel dettaglio le fasi sopra citate. % TODO
 
 % ================== ROS 2 ================================
 \section{ROS2}
+\label{sec:ros}
 % cit: https://docs.ros.org/en/humble/Citations.html
 % TODO: da continuare/rivedere
 ROS è un acronimo che sta per \textbf{R}obot \textbf{O}perating \textbf{S}ystem e,
 sebbene il nome possa trarre in inganno, non è un sistema operativo nel senso tradizionale,
-bensì è più simile a un SKD (Software Development Kit).
+bensì è più simile a un SDK (Software Development Kit).
 % https://www.ros.org/blog/ecosystem/
 Viene usato da tutta l'industria della robotica: dalla ricerca all'insegnamento, da progetti
 di un gruppo di persone a progetti più importanti di grosse aziende.\\
@@ -118,16 +132,39 @@ del tuo progetto \dots
 
 ROS si presenta come un mediatore -- un \textbf{middleware} -- tra l'applicazione robot e l'hardware:
 alla base fornisce un metodo di comunicazione tra le componenti dell'applicativo chiamati
-\textbf{\textit{Nodi}} secondo il pattern \textit{publisher/subscriber} di tipo anonimo.
+\hyperref[ros:nodes]{\textbf{\textit{Nodi}}} secondo il pattern \textit{publisher/subscriber} di tipo anonimo.
 L'insieme dei nodi e dei loro collegamenti formano il \textit{ROS~Graph}, il grafo dei nodi.
-\\
+\bigskip
 
 \noindent Di seguito si analizzano le componenti principali di cui ROS è composto.
 
 \paragraph{Nodi}
-I nodi, \textit{Nodes} in inglese, sono l'unità computazionale che partecipa al grafo dei nodi;
-idealmente, dovrebbero compiere un compito logicamente separato dal resto dei nodi.\\
-Essi possono \textit{pubblicare} e \textit{sottoscriversi} a dei \textbf{\textit{Topic}} per inviare e
-ricevere dati da altri componenti del grafo.
+\label{ros:nodes}
+I nodi, \textit{Nodes} in inglese, sono l'unità computazionale che partecipa al ROS Graph;
+idealmente, un nodo dovrebbe essere responsabile di un solo compito, logicamente separato
+da altri altri, per esempio controllare le ruote, processare i dati grezzi derivati dalle misurazioni
+dei laser o implementare un algoritmo come Pure Pursuit.
+Un completo sistema robotico comprende, quindi, un insieme di nodi che lavorano congiuntamente, spesso
+contenuti nello stesso eseguibile.
 
 \paragraph{Topic}
+\label{ros:topics}
+I topic sono il principale strumento con cui i nodi di un ROS Graph si \textit{scambiano dati}.
+I topic sono entità \textbf{\textit{fortemente tipizzate}} che implementano
+un pattern \textbf{\textit{publisher/subscriber}} di tipo \textit{anonimo}, ciò significa
+che i nodi conoscono una interfaccia comune con cui scambiarsi messaggi ben definiti.\\
+\textit{Anonimo} significa che chi invia o riceve dei messagi da o verso un topic
+non ha modo di identificare mittente o destinatario perchè, in questo contesto, non ha una grossa rilevanza,
+sebbene esistano, comunque, dei modi per scoprirlo; questo ha il vantaggio di una grossa
+flessibilità in termini di manuntenibilità.\\
+I nodi possono \textit{pubblicare} e \textit{sottoscriversi} ad un numero arbitrario di topic
+per inviare e ricevere dati da altri componenti del grafo: si ha quindi una relazione molti a molti.\\
+I topic vengono identificati da una stringa univoca che ne rappresenta il nome.
+
+\paragraph{Messaggi}
+
+\paragraph{Parametri e Launch files}
+
+%TODO: accenno a servizi e actions
+
+%TODO: rviz

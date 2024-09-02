@@ -1,5 +1,7 @@
 \documentclass[12pt,a4paper]{report}
 
+%TODO: chiedere per bibliografia/siti
+
 % =============== PACKAGES =================
 % \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -11,6 +13,9 @@
 \usepackage{geometry}
 \usepackage{setspace}
 
+\usepackage[backend=biber]{biblatex}
+\usepackage{csquotes}
+
 % =============== GENERAL SETTINGS =========
 % \geometry{a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm}
 
@@ -18,6 +23,8 @@
 \pagestyle{headings}
 
 \graphicspath{{images/}}
+
+\addbibresource{bibliography.bib}
 
 %================ FRONT PAGE ==============
 \title{Tesi}
@@ -34,4 +41,5 @@
 % Chapter
 \include{chapters/introduzione.tex}
 
+\printbibliography
 \end{document}
