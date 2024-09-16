@@ -1,20 +1,25 @@
 \documentclass[12pt,a4paper]{report}
 
-%TODO: chiedere per bibliografia/siti
+%TODO: cose da chiedere al prof:
+% chiedere per bibliografia/siti quali mettere e quando citarli
+% quando usare inglese 
+% quando usare italic e bold
+
 
 % =============== PACKAGES =================
 % \usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{wrapfig}
-\usepackage{float}
-\usepackage{hyperref}
-\usepackage[italian]{babel}
-\usepackage{lipsum}
-\usepackage{geometry}
+\usepackage{graphicx} % per le immagini
+\usepackage{wrapfig} % metti le immagine in mezzo al testo
+\usepackage{float} % metti le immagini dove vuoi 
+\usepackage{hyperref} % per i link e riferimenti
+\usepackage[italian]{babel} % utile per suddividere le parole quando si va a capo
+\usepackage{geometry} % geometria della pagina
 \usepackage{setspace}
 
-\usepackage[backend=biber]{biblatex}
-\usepackage{csquotes}
+\usepackage{amsmath} % per ora utile per le frecce dei vettori in matematichese
+
+\usepackage[backend=biber]{biblatex} % bibliografia
+\usepackage{csquotes} % dipendenza di biblatex
 
 % =============== GENERAL SETTINGS =========
 % \geometry{a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm}
@@ -22,7 +27,7 @@
 % \setcounter{tocdepth}{4} % insert paragraph in toc
 \pagestyle{headings}
 
-\graphicspath{{images/}}
+\graphicspath{{images/}} % path delle immagini
 
 \addbibresource{bibliography.bib}
 

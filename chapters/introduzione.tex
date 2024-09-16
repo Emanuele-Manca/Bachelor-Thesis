@@ -1,9 +1,10 @@
 % ======================================================================
 % col: 20
+
 \chapter{Introduzione}
 \label{chap:intro}
 
-Di seguito si descrivono le tecnologie usate e i concetti base che è necessario conoscere.
+% Di seguito si descrivono le tecnologie usate e i concetti base che è necessario conoscere.
 
 \section{F1TENTH}
 F1TENTH è una community internazionale di ricercatori, ingegneri e appassionati di sistemi autonomi
@@ -69,7 +70,7 @@ Il simulatore definisce la dinamica del veicolo in modo tale da avere una simula
 più reale possibile % Sim2Real problem
 % e grazie a ROS e rviz (che sta per ROS Visualizer)
 
-% TODO: parlare dei laboratori svolti?
+% NOTE: parlare dei laboratori svolti?
 % \subsection{Laboratori}
 
 
@@ -84,12 +85,12 @@ più specifici e in modo tale che composti insieme risultino nella soluzione del
 \noindent Il \emph{software} per i veicoli autonomi segue un ciclo di operazioni
 in cui il prodotto di una fase è input della successiva; si indentificano in ordine tre fasi:
 \begin{enumerate}
-	\item \textbf{Perception} -- Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a se,
-	      ci si localizza nella mappa e si indentificano eventuali ostacoli o rivali;
-	\item \textbf{Planning} -- Stando ai dati generati nella fase precedente,
-	      si determinano quali saranno le \emph{mosse future} seguendo delle policy prescritte;
-	\item \textbf{Control} -- Si generano dei comandi di sterzata e di velocità per attuare le scelte
-	      determinate nella fase precedente.
+\item \textbf{Perception} -- Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a sè,
+	  ci si localizza nella mappa e si indentificano eventuali ostacoli o rivali;
+\item \textbf{Planning} -- Stando ai dati generati nella fase precedente,
+	  si determinano quali saranno le \emph{mosse future} seguendo delle policy prescritte;
+\item \textbf{Control} -- Si generano dei comandi di sterzata e di velocità per attuare le scelte
+	  determinate nella fase precedente.
 \end{enumerate}
 
 L'input per la prima fase (\textit{Perception}) e l'ouput dell'ultima (\textit{Control})
@@ -102,17 +103,17 @@ il più reattivi possibile, dunque si tende ad eseguire il ciclo tra le 20 e 50 
 
 \noindent Una rappresentazione grafica della pipeline intera si trova alla figura \ref{fig:av-pipeline}\\
 \begin{figure}[ht]
-	\centering
-	\caption{Pipeline per i veicolo autonomi}
-	\includegraphics[width=\textwidth]{AV-pipeline.png}
-	\label{fig:av-pipeline}
+\centering
+\caption{Pipeline per i veicolo autonomi}
+\includegraphics[width=\textwidth]{AV-pipeline.png}
+\label{fig:av-pipeline}
 \end{figure}
 
 Analizziamo più nel dettaglio le fasi sopra citate.
 \subsection{Perception}
 % fonte: https://www.researchgate.net/publication/358632526_Autonomous_Vehicles_on_the_Edge_A_Survey_on_Autonomous_Vehicle_Racing
 % paragrafo perception
-La prima fase ha il compito di analizzare i dati prodotti da diversi tipi di sensori come
+La prima fase ha il compito di analizzare i dati prodotti da diversi tipi di sensori come quelli
 ottici, laser e IMU (Inertial Measurment Unit) e ha come obiettivi quelli di:
 \begin{itemize}
 	\item determinare l'ambiente statico, chiamato anche \textit{mappa}, che in questo contesto
@@ -128,7 +129,7 @@ di studio per questa tesi -- algortimi di mapping e localization, come Particle 
 
 \paragraph{Localization}
 % https://docs.google.com/presentation/d/1EAzm9A7FbAZFmA8l3ZNb2qjY_GqrLP0r-0uYwL0lLfs/edit#slide=id.g11505ea6fbe_0_901
-Sebbene possano essere sfruttate tecnologie come il GPS, la ricerca nella corse autonome si concentra
+Sebbene possano essere sfruttate tecnologie come il GPS, la ricerca nelle corse autonome si concentra
 maggiormente su una soluzione che richieda solo l'uso di sensori ottici, laser e odometria.
 Per effettuare la localizzazione del robot è necessario avere un modello della mappa.
 
@@ -142,22 +143,22 @@ introduce nei calcoli degli errori che si accumulano col tempo, portando a risul
 La soluzione è quella di rendere più robusti i calcoli tenendo conto del rumore dell'odometria e dei sensori
 e compensare alla mancanza di informazioni riguardo la posizione iniziale. Gli algoritmi modellano questo
 aspetto usando il \textit{calcolo delle probabilità}. I principali sono: il già citato Particle Filter,
-noto anche come AMCL (Adaptive Monte Carlo Localization) e principale algoritmo usato nello studio di
-questa tesi e nei laboratori, filtro di Bayes e derivati come Kalman filter.
+noto anche come AMCL (Adaptive Monte Carlo Localization) e principale algoritmo di localization usato 
+nello studio di questa tesi e nei laboratori, filtro di Bayes e derivati come Kalman filter.
 
-% TODO: parlare di particle filter?
+% NOTE: parlare di particle filter?
 
 \paragraph{SLAM}
 SLAM è una tecnica che consente ai robot di eseguire simultaneamente la localizzazione e il mapping
 di un ambiente sconosciuto. Siccome i problemi di mapping e localization necessitano l'uno dell'altro
 per per poter essere risolti, è necessario risolverli contemporaneamente se non si hanno dati
-ne sull'ambiente ne sulla posizione del robot.\\
+nè sull'ambiente nè sulla posizione del robot.\\
 Ad alto livello, l'algoritmo segue questi passaggi:
-% TODO: da rivedere/rimuovere nel caso
+% NOTE: da rivedere/rimuovere nel caso
 \begin{enumerate}
 	\item \textit{prima scansione}: si usa la prima scansione come mappa iniziale;
 	\item \textit{cambio della posizione}: il robot si muove di una certa quantità in un piccolo
-	      lasso di tempo, si regitra quindi una nuova scansione della mappa;
+	      lasso di tempo, si registra quindi una nuova scansione della mappa;
 	\item \textit{stima della posizione}: la nuova scansione viene correlata con la mappa per
 	      stimare il cambiamento di posizione;
 	\item \textit{aggiornamento della mappa}: si integra la nuova scansione nella costruzione della mappa
@@ -166,9 +167,53 @@ Ad alto livello, l'algoritmo segue questi passaggi:
 
 \subsection{Planning}
 La fase di Planning è stata argomento di studio approfondito di questa tesi, perciò verrà descritta
-completamente nel \hyperref[chap:plan]{Capitolo \ref{chap:plan}} (pag. \pageref{chap:plan})
+completamente nel Capitolo \ref{chap:plan} (pag. \pageref{chap:plan})
 
 \subsection{Control}
+La terza fase prevede di attuare le decisioni calcolate nella fase di planning: deve quindi generare, in
+questo contesto, dei controlli di accelerazione e angolazione delle ruote. In realtà questa fase rientra
+in un più vasto e più generale campo di studi: l'\textit{ingegneria del controllo} (o dell'automazione).\\
+I principali problemi che bisogna affrontare in questa fase sono:
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item[$-$] come seguire una traiettoria data?
+	\item[$-$] come compensare gli errori degli attuatori?
+	\item[$-$] come guidare il più velocemente possibile?
+\end{itemize}
+
+% TODO: distinguere open-loop e feedback
+Si fanno distinzione di due tipologie di algoritmi di controllo: gli \textit{open-loop} e
+\textit{closed-loop}, chiamati anche feedback. In questo contesto, la differenza tra i due è che la
+seconda tipologia di algoritmi riceve in input, appunto in \textit{feedback}, anche lo stato corrente del
+veicolo rispetto agli output di controllo generati precedentemente; in questo modo è possibile calcolare
+l'errore tra il comando calcolato e l'effettivo risultato dell'applicazione di quel comando dagli
+attuatori così da poterlo compensare al prossimo comando inviato.
+
+\paragraph{PID Controller}
+% https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
+% lezione 4
+L'algoritmo più conosciuto, spiecialmente per la sua semplicità, è il \textit{PID Controller} che viene
+usato ampiamente in tutta l'industria dell'ingegneria del controllo, non solo in questo contesto.\\
+PID è un acronimo che sta per \textbf{P}roportional-\textbf{I}ntegral-\textbf{D}erivative e questo
+suggerisce che l'ouput è calcolato secondo tre parametri. Si tratta di un algoritmo closed-loop.
+
+Con \textbf{proporzionale} si intende che il comando generato deve essere proporzionale all'errore tra lo
+stato corrente del robot e lo stato desiderato.
+Siccome ci si vuole che l'errore diminuisca col tempo, con \textbf{derivativo} si intende che si applica
+una correzione all'ouput che è proporzionale alla velocità con cui l’errore si riduce.
+Infine, con \textbf{integrale} si applica un'ulteriore correzione calcolata sia dalla magnitudine
+dell'errore sia dalla sua durata nel tempo, ovvero si correggono gli errori accumulati nel tempo che
+avrebbero dovuto essere corretti prima.
+
+\paragraph{Pure Pursuit}
+Un'altro algortimo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
+problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un tracciato, che il
+robot deve seguire. L'algortimo tiene conto della dinamica del veicolo, che in questo caso è
+non-olonomico, quindi calcola l'arco che congiunge il robot e il primo waypoint che si trova ad una
+distanza prefissata, il lookahead, dalla macchina.
+Questo è stato il principale algoritmo usato nei laboratori e nello studio della tesi, seppur con qualche
+modifica migliorativa.
+
 
 % ================== ROS 2 ================================
 \section{ROS2}
@@ -213,6 +258,12 @@ vengono chiamati \hyperref[ros:nodes]{\textbf{\textit{Nodi}}}, attraverso divers
 L'insieme dei nodi e dei loro collegamenti formano il \textit{ROS~Graph}, il grafo dei nodi.
 
 \medskip
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{ros-topic-srv.png}
+	\caption{Esempio di ROS Graph}
+	\label{fig:ros-topic-srv}
+\end{figure}
 \noindent Di seguito si analizzano le componenti principali di cui ROS è composto.
 % https://docs.ros.org/en/iron/Concepts/Basic.html
 \paragraph{Nodi}
@@ -224,7 +275,7 @@ idealmente, un nodo dovrebbe essere responsabile di un solo compito, logicamente
 da altri altri, per esempio controllare le ruote, processare i dati grezzi derivati dalle misurazioni
 dei laser o implementare un algoritmo come Pure Pursuit.
 Un completo sistema robotico comprende, quindi, un insieme di nodi che lavorano congiuntamente, spesso
-contenuti nello stesso eseguibile.
+contenuti nello stesso eseguibile.\\
 
 \paragraph{Topic}
 \label{ros:topics}
@@ -238,7 +289,7 @@ che i nodi conoscono una interfaccia comune con cui scambiarsi messaggi ben defi
 non ha modo di identificare mittente o destinatario perchè, in questo contesto, non ha una grossa rilevanza,
 sebbene esistano comunque dei modi per scoprirlo; inoltre, ogni messaggio generato da un publisher
 viene ricevuto da ogni subscriber, nell'idea che un nodo si sottoscriva a un topic solo se ne è
-interssato; questo ha il vantaggio di una grossa flessibilità in termini di manuntenibilità.\\
+interessato; questo ha il vantaggio di una grossa flessibilità in termini di manuntenibilità.\\
 I nodi possono \textit{pubblicare} e \textit{sottoscriversi} ad un numero arbitrario di topic
 per inviare e ricevere dati da altri componenti del grafo: si può avere quindi una relazione uno a
 uno, uno a molti, molti a uno e molti a molti.\\
@@ -268,6 +319,39 @@ parametri (per esempio da CLI), a patto che venga gestito nel codice del nodo.
 I launch file possono essere usati anche per avviare più nodi contemporaneamente, in modo da
 automatizzare l'intero applicativo.
 
-%TODO: accenno a servizi e actions
+\paragraph{Services e Actions}
+% https://docs.ros.org/en/humble/Concepts/Basic/About-Actions.html
+% https://docs.ros.org/en/humble/Concepts/Basic/About-Services.html
+Altri due sistemi di comunicazioni fra \hyperref[ros:nodes]{nodi} sono i Servizi e le Azioni.
+% NOTE: aggiustare "ad altri nodi" per non interrompere il flusso di lettura
+Questi sono sostanzialmente chiamate remote -- ovvero ad altri nodi -- a procedure seguendo il paradigma
+client/server. La loro principale differenza è concettuale e si discrimina dalla velocità di esecuzione:
+nei servizi, infatti, la risposta deve essere rapida, mentre nelle azioni ci si aspetta una esecuzione
+più lunga, anche di minuti, e si ha la possibilità di cancellarla prima del suo termine.
 
-%TODO: rviz
+Per citare qualche esempio, nei servizi troviamo operazioni di trasformazioni di coordinate tra frame, mentre
+nelle azioni operazioni di più alto livello come \textit{"raggiungi questo waypoint"}.
+
+Entrambi vengono definiti con strutture simili ai messaggi, con file di diversa estensione.
+
+\bigskip
+
+La figura \ref{fig:ros-topic-srv} rappresenta un ROS Graph comprendente tre nodi, un topic e un servizio;
+al topic sono sottoscritti i nodi in basso e ricevono i messaggi prodotti dal nodo in alto a destra che
+fa anche da server al servizio da cui riceve richieste dal nodo client.
+
+\section{RViz}
+RViz (\textbf{R}os \textbf{Vi}suali\textbf{z}er) è il principale strumento di visualizzazione 3D per gli
+applicativi ROS. Durante lo studio di questa tesi è stato usato per visualizzare la simulazione di
+F1TENTH gym, il modello del robot, la mappa del circuito ed eventuali visualizzazioni dei vari algoritmi
+in studio, per esempio i waypoint di goal per Pure Pursuit, l'albero dei punti random generati da RRT e i
+waypoint che compongono la raceline ottima.\\
+La figura \ref{fig:rviz-example} ne mostra un'esempio.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{placehold.jpg}
+	%TODO: cambiare immagine
+	\caption{Esempio di caso d'uso di RViz per visualizzare l'algoritmo RRT}
+	\label{fig:rviz-example}
+\end{figure}
