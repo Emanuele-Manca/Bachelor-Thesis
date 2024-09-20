@@ -110,8 +110,8 @@ processo di generazione del percorso ottimo secondo un certo criterio.
 \noindent In questa tesi sono state analizzate tre strategie differenti:
 \begin{itemize}
 	\setlength\itemsep{0em}
-	\item Percorso più breve  -- \hyperref[par:shortest-path]{\textit{shortest path}}
-	\item Curvatura minima -- \hyperref[par:mincurv]{\textit{minimum curvature}}
+	\item Percorso più breve  -- \textit{shortest path}
+	\item Curvatura minima -- \textit{minimum curvature}
 	\item Tempo minimo -- \textit{minimum time}
 \end{itemize}
 
@@ -259,7 +259,6 @@ funzioni quadratiche. L'obiettivo è quello di trovare un vettore che minimizzi 
 una funzione obiettivo preservando contemporaneamente dei vincoli, descritti da diseguazioni.
 
 \paragraph{Percorso più breve}\cite{race-model}\cite{globalplanning-lec}
-\label{par:shortest-path}
 Il modello in questione deve descrivere il percorso più breve, ovvero che abbia la distanza minore tra i
 samples. Un sample della raceline viene formulato come:
 \[
@@ -299,7 +298,6 @@ dove il vincolo per $a_i$ è lo stesso descritto nella formula \ref{eq:a_constr}
 \end{figure}
 
 \paragraph{Minima Curvatura}
-\label{par:mincurv}
 La formulazione del modello è identica a differenza, ovviamente, della funzione obiettivo che deve
 descrivere la curvatura della raceline, il modello, quindi, viene definito come:
 \[
