@@ -109,7 +109,7 @@ trasformano nel frame della mappa e esportano queste informazioni in un csv cont
 \section{Esecuzione dell'ottimizzazione}
 Ad alto livello, l'ottimizzazione cerca iterativamente di aggiustare la centerline in modo tale da
 ottenere il risultato migliore, come spiegato nel capitolo \ref{chap:opt} (pag. \pageref{chap:opt}).
-Questa fase non richiede solamente di eseguire il programma solutore, ma è necessario innanzitutto
+Questa fase non richiede solamente di eseguire il programma solutore, ma è necessario
 configurare i parametri che l'algortimo usa. Questo compito si chiama \textit{tuning} dei parametri
 e consiste nel trovare quelli che meglio si adattano nel trovare la soluzione migliore.
 
@@ -125,5 +125,19 @@ tre stepsize diversi:
 
 \noindent Altri parametri fanno riferimento alla dinamica del veicolo, come accelerazione massima e velocità
 massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza compresa on un margine di
-sicurezza aggiuntivo.
+sicurezza aggiuntivo. 
 
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.75\textwidth]{stepsize.png}
+	\end{center}
+	\caption{Quattro traiettorie con stepsize diversi: nera a 1.5m, rossa a 0.5m, arancione a 0.3m e azzurra a 0.15m}
+	\label{fig:stepsize}
+\end{figure}
+
+
+È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione indichi un risultato
+più preciso a costo di aumentare la complessità computazionale e anche il tempo di esecuzione. In figura
+\ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
+
+% TODO: palare della parte del notebook

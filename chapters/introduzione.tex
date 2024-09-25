@@ -17,7 +17,7 @@ di essere \textit{un decimo} di quelle di F1, da cui il nome.
 \end{wrapfigure}
 Oltre a questo, promuove la ricerca nell'ambito della guida autonoma
 e altri campi tra cui reinforcement learning, sistemi di comunicazione e robotica;
-offre, inoltre, corsi gratuiti online e una infrastuttura per imparare a costruire l'auto da corsa
+offre, inoltre, corsi gratuiti online e una infrastruttura per imparare a costruire l'auto da corsa
 e sviluppare il software necessario per farla gareggiare. \cite{ftenth-web}
 
 La community è stata fondata all'Università della Pennsylvania nel 2016 ma ha iniziato rapidamente
@@ -42,7 +42,7 @@ dove poter applicare le nozioni e algoritmi imparati.
 	      algoritmi basati su filtri per la localizzazione del robot data una mappa, algoritmi localizzazione e
 	      di modellazione dell'ambiente come SLAM;
 	\item \textit{Modulo D} -- Planning \& Control: Pure Pursuit e RRT:\\
-	      Descrizione dello stack di pianificazione e controllo di un veicolo autonomo, algortimo di
+	      Descrizione dello stack di pianificazione e controllo di un veicolo autonomo, algoritmo di
 	      \textit{path tracking} Pure Pursuit basato sulla dinamica del veicolo, introduzione ai
 	      \textit{local planner} e algoritmi come RRT, spline e clotoidi per descrivere un percorso,
 	      State lattice planner, Graph based planner;
@@ -76,6 +76,7 @@ più reale possibile % Sim2Real problem
 
 % ================== Autonomous Driving Pipeline =======================
 \section{Autonomous Driving Pipeline}
+\label{sec:pipeline}
 Un progetto ben strutturato è più efficiente da mantenere e ha maggiori probabilità
 di funzionare correttamente: ciò si applica anche in questo caso.\\
 Un progetto complesso come quello dei veicoli autonomi deve essere suddiviso in sotto-problemi
@@ -83,10 +84,10 @@ più specifici e in modo tale che composti insieme risultino nella soluzione del
 \par
 
 \noindent Il \emph{software} per i veicoli autonomi segue un ciclo di operazioni
-in cui il prodotto di una fase è input della successiva; si indentificano in ordine tre fasi:
+in cui il prodotto di una fase è input della successiva; si identificano in ordine tre fasi:
 \begin{enumerate}
 \item \textbf{Perception} -- Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a sè,
-	  ci si localizza nella mappa e si indentificano eventuali ostacoli o rivali;
+	  ci si localizza nella mappa e si identificano eventuali ostacoli o rivali;
 \item \textbf{Planning} -- Stando ai dati generati nella fase precedente,
 	  si determinano quali saranno le \emph{mosse future} seguendo delle policy prescritte;
 \item \textbf{Control} -- Si generano dei comandi di sterzata e di velocità per attuare le scelte
@@ -123,8 +124,8 @@ ottici, laser e IMU (Inertial Measurment Unit) e ha come obiettivi quelli di:
 	      determinare posizione e orientamento del robot rispetto alla mappa.
 \end{itemize}
 
-In questa fase, quindi, si ritrovano algortimi di object detection -- di cui però non è stato argomento
-di studio per questa tesi -- algortimi di mapping e localization, come Particle Filter e SLAM
+In questa fase, quindi, si ritrovano algoritmi di object detection -- di cui però non è stato argomento
+di studio per questa tesi -- algoritmi di mapping e localization, come Particle Filter e SLAM
 (\textit{S}imultaneous \textit{L}ocalization \textit{A}nd \textit{M}apping).
 
 \paragraph{Localization}
@@ -192,7 +193,7 @@ attuatori così da poterlo compensare al prossimo comando inviato.
 \paragraph{PID Controller}
 % https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
 % lezione 4
-L'algoritmo più conosciuto, spiecialmente per la sua semplicità, è il \textit{PID Controller} che viene
+L'algoritmo più conosciuto, specialmente per la sua semplicità, è il \textit{PID Controller} che viene
 usato ampiamente in tutta l'industria dell'ingegneria del controllo, non solo in questo contesto.\\
 PID è un acronimo che sta per \textbf{P}roportional-\textbf{I}ntegral-\textbf{D}erivative e questo
 suggerisce che l'ouput è calcolato secondo tre parametri. Si tratta di un algoritmo closed-loop.
@@ -206,9 +207,9 @@ dell'errore sia dalla sua durata nel tempo, ovvero si correggono gli errori accu
 avrebbero dovuto essere corretti prima.
 
 \paragraph{Pure Pursuit}
-Un'altro algortimo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
+Un'altro algoritmo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
 problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un tracciato, che il
-robot deve seguire. L'algortimo tiene conto della dinamica del veicolo, che in questo caso è
+robot deve seguire. L'Algoritmo tiene conto della dinamica del veicolo, che in questo caso è
 non-olonomico, quindi calcola l'arco che congiunge il robot e il primo waypoint che si trova ad una
 distanza prefissata, il lookahead, dalla macchina.
 Questo è stato il principale algoritmo usato nei laboratori e nello studio della tesi, seppur con qualche
@@ -284,8 +285,8 @@ I topic sono il principale strumento con cui i nodi di un ROS Graph si \textit{s
 I topic sono entità \textbf{\textit{fortemente tipizzate}} che implementano
 un pattern \textbf{\textit{publisher/subscriber}} di tipo \textit{anonimo}, ciò significa
 che i nodi conoscono una interfaccia comune con cui scambiarsi messaggi ben definiti.\\
-\textit{Anonimo} significa che chi invia o riceve dei messagi da o verso un topic
-non ha modo di identificare mittente o destinatario perchè, in questo contesto, non ha una grossa rilevanza,
+\textit{Anonimo} significa che chi invia o riceve dei messaggi da o verso un topic
+non ha modo di identificare mittente o destinatario perché, in questo contesto, non ha una grossa rilevanza,
 sebbene esistano comunque dei modi per scoprirlo; inoltre, ogni messaggio generato da un publisher
 viene ricevuto da ogni subscriber, nell'idea che un nodo si sottoscriva a un topic solo se ne è
 interessato; questo ha il vantaggio di una grossa flessibilità in termini di manuntenibilità.\\
@@ -309,7 +310,7 @@ tipo dell'attributo, nome ed eventuale valore di default. Il tipo può essere un
 % https://docs.ros.org/en/humble/Concepts/Basic/About-Parameters.html
 É possibile parametrizzare i nodi in modo da configurarli sia all'avvio sia durante l'esecuzione
 senza cambiare codice e ricompilarlo. I parametri consistono in una coppia chiave-valore ed una
-opzionale descrizione, che può indidicare eventuali vincoli di tipo e range di valori.\\
+opzionale descrizione, che può indicare eventuali vincoli di tipo e range di valori.\\
 Spesso i parametri vengono inizializzati all'avvio del nodo attraverso quelli che vengono chiamati
 \textit{launch file} usati col comando \verb|ros2 launch| e che quindi permettono di avere \textit{diverse
 configurazioni dello stesso nodo} senza doverlo ricompilare. Un'altro caso d'uso è durante la fase di
