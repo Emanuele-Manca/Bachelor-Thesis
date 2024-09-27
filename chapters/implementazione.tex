@@ -24,6 +24,15 @@ posizione $(x,y)$ di ogni sample e almeno una terza colonna per la velocità per
 raceline. Successivamente si è scelto di esportare anche l'orientamento del robot rispetto alla mappa e
 l'accelerazione per ogni sample.
 
+\bigskip
+\noindent Di seguito si indicano le specifiche della macchina usata durante questa tesi:
+\begin{itemize}
+	\item[-] \textit{OS}: Ubuntu 22.04.4 LTS (Jammy Jellyfish)
+	\item[-] \textit{Kernel}: 6.8.0-40 generic x86\_64
+	\item[-] \textit{CPU}: Intel Core i7-6700k quad core
+	\item[-] \textit{RAM}: 16GB
+\end{itemize}
+
 \section{Generazione centeline}
 Affinchè l'algoritmo per l'estrazione della linea di riferimento restituisca un risultato corretto, come
 detto in precedenza, l'immagine della mappa deve rappresentare un circuito chiuso e con bordi ben
@@ -50,15 +59,6 @@ si chiama EDT (Euclidian Distance Transform), che calcola la distanza euclidea p
 dell'immagine dal background: in questo caso, lo sfondo preso in considerazione sono i punti non
 esplorati, ovvero quelli esterni ai bordi del circuito.
 Un esempio di applicazione di EDT si trova all'immagine \ref{fig:edt-ex}.
-
-% \begin{figure}[h]
-% 	\begin{minipage}[c]{1\textwidth}
-% 		\includegraphics[width=1\textwidth]{edt-ex.png}
-% 		\caption{Esempio di applicazione dell'agortimo EDT su una immagine binaria, l'immagine a destra
-% 		mostra il risultato indicando la distanza euclidea dal background per ogni pixel}
-% 		\label{fig:edt-ex}
-% 	\end{minipage}\hfill
-% \end{figure}
 
 Un aspetto da sottolineare è che le immagini fornite da F1TENTH rappresentano una occupancy grid
 ternaria, in cui il grigio corrisponde alle zone non esplorate; per sfruttare l'algoritmo sopra citato è
@@ -97,14 +97,15 @@ da un pixel del percorso, si cerca il primo pixel bianco in tutte le direzioni c
 esplorato: seguendo questo processo si ottengono le posizioni dei pixel e la loro distanza dai bordi, si
 trasformano nel frame della mappa e esportano queste informazioni in un csv contentente le colonne
 \verb|x, y, width_left, width_right|.
-
+\vfill
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.3\textheight]{monza-skel.png}
+		\includegraphics[width=0.6\textwidth, angle=90]{monza-skel.png}
 	\end{center}
 	\caption{Visualizzazione della centerline di Monza, il punto verde indica il punto di partenza}\label{fig:monza-skel}
 \end{figure}
 
+\newpage
 
 \section{Esecuzione dell'ottimizzazione}
 Ad alto livello, l'ottimizzazione cerca iterativamente di aggiustare la centerline in modo tale da
@@ -120,24 +121,64 @@ tre stepsize diversi:
 	\item \verb|stepsize_prep|: viene usato per l'interpolazione lineare prima dell'approssimazione del
 		percorso con la spline;
 	\item \verb|stepsize_reg|: usato durante l'ottimizzazione per l'interpolazione della spline;
-	\item \verb|stepsize_interp_after_opt|: usato per campionare la spline dopo l'ottimizzaione e da esportare in csv;
+	\item \verb|stepsize_interp_after_opt|: usato per campionare la spline dopo l'ottimizzazione e da
+		esportare in csv;
 \end{itemize}
+Altri parametri fanno riferimento alla dinamica del veicolo, come angolo di sterzata massimo e velocità
+massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza. Sono disponibili anche
+parametri specifici per il tipo di ottimizzazione, per esempio un valore aggiuntivo alla larghezza del
+veicolo che comprende un margine di sicurezza dai bordi del circuito. Di seguito si mostrano alcuni dei
+valori usati che descrivono le proprietà del veicolo indipendetemente dal tipo di ottimizzazione usato:
 
-\noindent Altri parametri fanno riferimento alla dinamica del veicolo, come accelerazione massima e velocità
-massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza compresa on un margine di
-sicurezza aggiuntivo. 
+\begin{lstlisting}
+veh_params = {
+	"v_max": 15.0,       # [m/s]
+	"length": 0.58,      # [m]
+	"width": 0.31,       # [m]
+	"mass": 3.74,        # [Kg]
+	"dragcoeff": 0.075,  # [kg*m^2/m^3]
+	"curvlim": 3.0,      # [rad/m]
+	"g": 9.81            # [N/Kg]
+}
+\end{lstlisting}
 
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=0.75\textwidth]{stepsize.png}
 	\end{center}
-	\caption{Quattro traiettorie con stepsize diversi: nera a 1.5m, rossa a 0.5m, arancione a 0.3m e azzurra a 0.15m}
+	\caption{Quattro traiettorie con stepsize diversi: nera a 1.5m, rossa a 0.5m,
+	arancione a 0.3m e azzurra a 0.15m}
 	\label{fig:stepsize}
 \end{figure}
 
+\subsection{Tuning dei parametri}
+È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione porti un risultato
+più preciso a costo di aumentare il tempo di esecuzione. % TODO: fare riferimento all'analisi
+In figura \ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
 
-È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione indichi un risultato
-più preciso a costo di aumentare la complessità computazionale e anche il tempo di esecuzione. In figura
-\ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
+Come ci si potrebbe aspettare, il parametro che controlla principalmente il tempo di esecuzione è lo
+stepsize durante l'ottimizzazione, ovvero \verb|stepsize_reg|, per questo è stato necessario scegliere un
+valore tale che bilanci bene la qualità del tracciato prodotto e il tempo di esecuzione. Infatti, per
+evitare che l'ottimizzazione impieghi troppo tempo, il numero di iterazioni è limitato a 2000: se entro
+questo limite non è stata trovata una soluzione viene ritornato un errore.
 
-% TODO: palare della parte del notebook
+In linea generale, si è riscontrato che:
+\begin{itemize}
+	\item \verb|stepsize_prep|, per quanto riguarda il percorso più breve e la curvatura minima, impatta
+		sulla qualità del risultato, diversamente dal tempo minimo; non influisce significativamente sul
+		tempo di esecuzione. Valori in $[0.1, 0.5)$ per i primi due, $[0.5, 1]$ per mintime;
+	\item \verb|stepsize_reg|, come accennato precedentemente, incide sul tempo di esecuzione
+		e in modo apprezzabile per mintime; è significativo per la qualità del percorso. Valori $ > 0.3$
+		per shortest\_path e mincurv, valori $> 0.75$ per mintime;
+	\item \verb|stepsize_interp_after_opt| non incide in modo sostanziale sul tempo e per questo può
+		essere valorizzato in base alle necessità.
+\end{itemize}
+
+\begin{lstlisting}
+stepsize_opts={
+	"stepsize_prep": 0.75,
+	"stepsize_reg": 1.5,
+	"stepsize_interp_after_opt": 0.15
+}
+\end{lstlisting}
+
