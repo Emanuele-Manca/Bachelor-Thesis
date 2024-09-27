@@ -121,8 +121,8 @@ tre stepsize diversi:
 	\item \verb|stepsize_prep|: viene usato per l'interpolazione lineare prima dell'approssimazione del
 		percorso con la spline;
 	\item \verb|stepsize_reg|: usato durante l'ottimizzazione per l'interpolazione della spline;
-	\item \verb|stepsize_interp_after_opt|: usato per campionare la spline dopo l'ottimizzazione e da
-		esportare in csv;
+	\item \verb|stepsize_interp_after_opt|: usato per campionare la spline dopo l'ottimizzazione, è la
+		distanza dei sample esportati nel csv risultante;
 \end{itemize}
 Altri parametri fanno riferimento alla dinamica del veicolo, come angolo di sterzata massimo e velocità
 massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza. Sono disponibili anche
@@ -142,7 +142,7 @@ veh_params = {
 }
 \end{lstlisting}
 
-\begin{figure}
+\begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=0.75\textwidth]{stepsize.png}
 	\end{center}
@@ -169,16 +169,52 @@ In linea generale, si è riscontrato che:
 		tempo di esecuzione. Valori in $[0.1, 0.5)$ per i primi due, $[0.5, 1]$ per mintime;
 	\item \verb|stepsize_reg|, come accennato precedentemente, incide sul tempo di esecuzione
 		e in modo apprezzabile per mintime; è significativo per la qualità del percorso. Valori $ > 0.3$
-		per shortest\_path e mincurv, valori $> 0.75$ per mintime;
+		per shortest path e mincurv, mentre per mintime sono necessari valori $> 0.75$ per evitare di
+		sforare le 2000 iterazioni;
 	\item \verb|stepsize_interp_after_opt| non incide in modo sostanziale sul tempo e per questo può
-		essere valorizzato in base alle necessità.
+		essere valorizzato in base alle necessità dell'algortimo che userà il percorso.
 \end{itemize}
+A valori alti degli stepsize (es: $> 1.5$), può capitare che la raceline generata "tagli" il percorso per
+curve molto rapide, come nella chicane di Spa. Questo è capitato principalmente con l'algoritmo del
+percorso più breve, come mostrato alla figura \ref{fig:taglio-spa}
+
+\begin{figure}[h]
+	\begin{minipage}[c]{0.45\textwidth}
+		\includegraphics[width=0.3\textheight]{chicane_shpth.png}
+		\caption{Generazione errata del percorso per via di stepsize troppo ampi}
+		\label{fig:taglio-spa}
+	\end{minipage}\hfill
+	\begin{minipage}[c]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{nomral-crossed.png}
+		\caption{\raggedright Linee ortogonali alla centerline incrociate}
+		\label{fig:norm-cross}
+	\end{minipage}
+\end{figure}
+Altri parametri modificati durante le sperimentazioni sono qualità inerenti alle spline, principalmente
+lo smoothing factor. Quest'ultimo, se troppo basso e in concomitanza con valori di stepsize bassi, può
+generare delle linee ortogonali che si incrociano tra loro e che quindi non possono produrre un percorso
+corretto. Un esempio di questo caso è visibile all'immgine \ref{fig:norm-cross}. Durante le
+sperimentazioni questo valore è stato fissato a 80.
+\newpage
+\noindent Di seguito si mostrano gli stepsize usati per generare il percorso a figura \ref{fig:taglio-spa}.
+\begin{lstlisting}
+stepsize_opts={
+	"stepsize_prep": 1.0,
+	"stepsize_reg": 1.5,
+	"stepsize_interp_after_opt": 1.5
+}
+\end{lstlisting}
+Mentre i successivi sono i parametri della spline e stepsize utilizzati per la figura \ref{fig:norm-cross}.
 
 \begin{lstlisting}
 stepsize_opts={
-	"stepsize_prep": 0.75,
-	"stepsize_reg": 1.5,
-	"stepsize_interp_after_opt": 0.15
+	"stepsize_prep": 0.1,
+	"stepsize_reg": 0.5,
+	"stepsize_interp_after_opt": 0.3
+}
+
+reg_smooth_opts={
+	"k_reg": 3,   # grado della spline
+	"s_reg": 1.0  # smoothing factor [1.0, 100]
 }
 \end{lstlisting}
-
