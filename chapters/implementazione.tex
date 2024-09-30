@@ -2,6 +2,7 @@
 % col: 20
 
 \chapter{Implementazione}
+\label{chap:impl}
 In questo capitolo verranno descritti i passaggi implementati per generare la raceline ottima data una
 mappa.
 
@@ -107,6 +108,8 @@ trasformano nel frame della mappa e esportano queste informazioni in un csv cont
 
 \newpage
 
+%TODO: parlare di cosa produce (il csv)
+
 \section{Esecuzione dell'ottimizzazione}
 Ad alto livello, l'ottimizzazione cerca iterativamente di aggiustare la centerline in modo tale da
 ottenere il risultato migliore, come spiegato nel capitolo \ref{chap:opt} (pag. \pageref{chap:opt}).
@@ -152,8 +155,9 @@ veh_params = {
 \end{figure}
 
 \subsection{Tuning dei parametri}
+\label{par:tuning}
 È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione porti un risultato
-più preciso a costo di aumentare il tempo di esecuzione. % TODO: fare riferimento all'analisi
+più preciso a costo di aumentare il tempo di esecuzione. %, come dimostrato nel capitolo successivo. % TODO: fare riferimento all'analisi
 In figura \ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
 
 Come ci si potrebbe aspettare, il parametro che controlla principalmente il tempo di esecuzione è lo
@@ -169,7 +173,7 @@ In linea generale, si è riscontrato che:
 		tempo di esecuzione. Valori in $[0.1, 0.5)$ per i primi due, $[0.5, 1]$ per mintime;
 	\item \verb|stepsize_reg|, come accennato precedentemente, incide sul tempo di esecuzione
 		e in modo apprezzabile per mintime; è significativo per la qualità del percorso. Valori $ > 0.3$
-		per shortest path e mincurv, mentre per mintime sono necessari valori $> 0.75$ per evitare di
+		per shortest path e mincurv, mentre per mintime sono necessari valori $> 1.0$ per evitare di
 		sforare le 2000 iterazioni;
 	\item \verb|stepsize_interp_after_opt| non incide in modo sostanziale sul tempo e per questo può
 		essere valorizzato in base alle necessità dell'algortimo che userà il percorso.

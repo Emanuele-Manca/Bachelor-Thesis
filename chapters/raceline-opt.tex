@@ -35,7 +35,7 @@ l'inclinazione, tuttavia non sono state oggetto di studio in questa tesi dal fat
 F1TENTH non include questa variabilità, come accade nelle gare di F1.
 
 In linea generale, una curva può essere suddivisa in \textit{quattro sequenze} principali, come mostrato
-in figura \ref{fig:geom-apex}:
+in figura \ref{fig:geom-raceline}:
 \begin{enumerate}
 	\item Approccio e decelazione
 	\item Inizio della curva
@@ -50,13 +50,13 @@ Anche la traiettoria, dato che segue una curva, può essere definita con un ragg
 	\begin{center}
 		\includegraphics[width=0.65\textwidth]{geometric-apex.png}
 	\end{center}
-	\label{fig:geom-apex}
-	\caption{Rappresentazione delle fase di una raceline geometrica per una curva a destra}\label{fig:geom-raceline}
+	\caption{Rappresentazione delle fase di una raceline geometrica per una curva a destra}
+	\label{fig:geom-raceline}
 \end{figure}
 
 \paragraph{Raceline geometrica}
 L'approccio più semplice e immediato per affrontare una curva genera una raceline che prende il
-nome di \textit{raceline geometrica}. La strategia prevedere queste sequenze, rappresentate in figura
+nome di \textit{raceline geometrica}. La strategia prevede queste sequenze, rappresentate in figura
 \ref{fig:geom-raceline}:
 \begin{enumerate}
 	\item Approccio largo e verso l'esterno del circuito
@@ -91,11 +91,15 @@ in modo tale da affrontarla anch'essa nel modo ottimale. Si nota la distinzione 
 \begin{figure}[H]
 	\begin{minipage}[c]{0.45\textwidth}
 		\includegraphics[width=0.80\textwidth]{comparing-lines.png}
-		\caption{Comparazione tra raceline ottimale, in verde, e raceline geometrica, in blu tratteggiato}\label{fig:cmp-lines}
+		\caption{Comparazione tra raceline ottimale, in verde, e raceline geometrica, in blu
+		tratteggiato}
+		\label{fig:cmp-lines}
 	\end{minipage}\hfill
 	\begin{minipage}[c]{0.45\textwidth}
 		\includegraphics[width=1\textwidth]{multiple-corners.png}
-		\caption{Confronto tra raceline ottime con due curve distinte in sequenza}\label{fig:cmp-opt-lines}
+		\caption{\raggedright Confronto tra raceline ottime con due curve distinte in
+		sequenza}
+		\label{fig:cmp-opt-lines}
 	\end{minipage}
 \end{figure}
 
@@ -143,7 +147,11 @@ tempo più breve è descritto in \textit{"Minimum-time speed optimisation over a
 
 Per quanto riguarda la terza strategia, i due sottoproblemi devono essere risolti contemporaneamente
 usando algoritmi di controllo ottimale, questi hanno la possibilità di includere ulteriori vincoli come
-per esempio limitazioni al consumo di energia.\cite{christ2021time}
+per esempio limitazioni al consumo di energia e considerare l'attrito delle ruote per diversi terreni e
+condizioni meteo.\cite{christ2021time} Sono algoritmi con modelli dinamici dell'auto più completi e
+fedeli alla realtà che raccolgono nel problema diverse variabili, per questo sono più complessi e
+richiedono più sforzo computazionale, ma hanno il vantaggio di essere più realistici nel risultati
+rispetto alle loro controparti modellate in problemi di programmazione quadratica.
 
 % \label{sub:formal-def}
 % section a parte?
@@ -219,7 +227,6 @@ La distanza dei samples è un parametro dell'algoritmo e deve essere decisa in b
 
 \paragraph{Definizione di raceline}
 \label{par:raceline}
-% Anche la raceline, come la \ref[par:centerline]{centerline}, deve essere discretizzata.\\
 I samples della raceline vengono calcolati a partire da quelli delle centerline muovendoli sulla linea
 che unisce i due tracciati. Formalmente:
 \[
@@ -235,7 +242,7 @@ La figura \ref{fig:raceline-def} rappresenta graficamente questo processo.
 	\end{center}
 	\caption{Rappresentazione grafica della raceline, dove i punti blu rappresentano i samples della
 		centerline, mentre quelli arancioni sono quelli della raceline, traslati di un certo fattore lungo i
-		vettori $n$ corrispondenti}
+		vettori $n$ corrispondenti.}
 	\label{fig:raceline-def}
 \end{figure}
 
@@ -296,7 +303,8 @@ dove il vincolo per $a_i$ è lo stesso descritto nella formula \ref{eq:a_constr}
 	\begin{center}
 		\includegraphics[width=0.65\textwidth]{short-path-expl.png}
 	\end{center}
-	\caption{}\label{fig:short-path-expl}
+	\caption{Rappresentazione grafica della descrizione matematica di un sample.}
+	\label{fig:short-path-expl}
 \end{figure}
 
 \paragraph{Minima Curvatura}
