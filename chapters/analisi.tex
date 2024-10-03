@@ -37,8 +37,9 @@ la sua deviazione standard, la mediana e la minima, dato che la massima è stata
 
 Di seguito si mostrano le misurazioni per i due circuiti di Monza e Spa.
 
+% ================== SPA ===============================================
 \section{Spa}
-
+\label{sec:spa}
 \begin{table}[H]
 	\caption{Circuito di Spa}
 	\label{tab:opt-spa}
@@ -114,7 +115,6 @@ una più alta che è congrua anche con la variabilità dell'accelerazione nella 
 Come è possibile notare dal grafico~\ref{fig:speed-graph-spa}, solo mintime non ha mai toccato la massima
 velocità impostata, raggiungendo un picco di $14.7\ \nicefrac{m}{s}$ e solo per pochissimo tempo, mentre
 le altre due l'hanno tenuta per più tempo, mincurv tra tutte.
-
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{spa/speed-graph.png}
@@ -122,7 +122,6 @@ le altre due l'hanno tenuta per più tempo, mincurv tra tutte.
 	\caption{Profilo della velocità in Spa}
 	\label{fig:speed-graph-spa}
 \end{figure}
-
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{spa/acc-graph.png}
@@ -160,8 +159,6 @@ minor qualità rispetto a mintime.
 	\end{center}
 \end{table}
 
-
-
 \begin{figure}
 	\begin{center}
 	\begin{subfigure}[c]{0.3\textwidth}
@@ -181,8 +178,8 @@ minor qualità rispetto a mintime.
 	\end{center}
 \end{figure}
 
+% ================== MONZA =============================================
 \section{Monza}
-
 \begin{table}[H]
 	\caption{Circuito di Monza}
 	\label{tab:opt-monza}
@@ -197,9 +194,16 @@ minor qualità rispetto a mintime.
 		\end{tabular}
 	\end{center}
 \end{table}
+Anche in questo caso valgono le stesse considerazioni descritte per il circuito di \href{sec:spa}{Spa} sopra
+analizzato: gli algoritmi per mincurv e shortest path producono il risultato minore per le rispettive
+metriche, mentre sono poco affidabili per il laptime, di cui mintime offre un risultato più realistico per
+via della sua formulazione. Una nota da sottolineare è che l'algoritmo per mincurv è riuscito a
+minimizzare maggiormente la curvatura rispetto alla mappa precedente; in questo senso minimizzare si
+intende tendere a zero, dunque è necessario considerare i valori assoluti per la colonna della curvatura
+alla tabella \ref{tab:opt-monza}.
 \begin{table}[H]
 	\caption{Velocità in $\nicefrac{m}{s}$ per Monza}
-	\label{tab:}
+	\label{tab:vel-monza}
 	\begin{center}
 		\begin{tabular}{l|r|r|r|r}
 			              & \thead{Media} & \thead{Mediana} & \thead{Minima} & \thead{Dev. std} \\
@@ -211,10 +215,59 @@ minor qualità rispetto a mintime.
 		\end{tabular}
 	\end{center}
 \end{table}
+\begin{figure}
+	\begin{center}
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{monza/mintime-velocity-prof.png}
+		\caption{mintime}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{monza/mincurv-velocity-prof.png}
+		\caption{mincurv}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.365\textwidth}
+		\includegraphics[width=\textwidth]{monza/shortest-velocity-prof.png}
+		\caption{shortest path}
+	\end{subfigure}
+		\caption{Confronto della velocità per le tre strategie}
+		\label{fig:monza-vel-comparison}
+	\end{center}
+\end{figure}
+Anche per la velocità valgono alcune considerazioni fatte per Spa: la strategia di mintime è più
+conservativa rispetto alle altre, ma in questo caso ha la deviazione standard più alta tra tutte.
+In questo caso, anche mintime ha raggiunto la velocità massima indicata, tuttavia l'ha raggiunta solo una
+volta e comunque per pochi metri, come è possibile alla figura \ref{fig:speed-graph-monza}; mentre,
+anche in questo caso, mincurv è al primo posto per aver mantenuto per più tempo la velocità massima,
+complice anche la topologia della mappa che offre maggiori possibilità grazie ai suoi rettilinei.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{monza/vel-graph.png}
+	\end{center}
+	\caption{Profilo della velocità per Monza}
+	\label{fig:speed-graph-monza}
+\end{figure}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\textwidth]{monza/acc-graph.png}
+	\end{center}
+	\caption{Profilo dell'accelerazione per Monza}
+	\label{fig:acc-graph-monza}
+\end{figure}
+A differenza di Spa, la variabilità della strategia del percorso più breve risulta in linea con le altre
+strategie e la sua mediana risulta simile alla rispettiva di Spa, come risulta dalla tabella
+\ref{tab:acc-monza}. Spicca il valore fuori scala dell'accelerazione massima della strategia di mintime:
+analizzando il dataset e osservando il grafico alla figura \ref{fig:acc-graph-monza} si nota
+immediatamente che si tratta di un outlier generato, tra l'altro, solo per un singolo sample e quindi non
+veramente applicabile dal robot reale o simulato. In ultima analisi, si tratta di un errore relativo a
+questa esecuzione in particolare.
+
+Qualitativamente dalla figura \ref{fig:monza-acc-comparison}, anche in questo circuito si nota come
+mintime sia più graduale, soprattutto rispetto a shortest path, dove si può osservare molte volte
+repentini sbalzi di accelerazione, che sono impraticabili per un veicolo.
 
 \begin{table}[H]
 	\caption{Accelerazione in $\nicefrac{m}{s^2}$ per Monza}
-	% \label{tab:}
+	\label{tab:acc-monza}
 	\begin{center}
 		\begin{tabular}{l|r|r|r|r}
 			              & \thead{Mediana} & \thead{Massima} & \thead{Minima} & \thead{Dev. std} \\
@@ -226,7 +279,26 @@ minor qualità rispetto a mintime.
 		\end{tabular}
 	\end{center}
 \end{table}
+\begin{figure}
+	\begin{center}
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{monza/mintime-acc-prof.png}
+		\caption{mintime}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{monza/mincurv-acc-prof.png}
+		\caption{mincurv}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.383\textwidth}
+		\includegraphics[width=\textwidth]{monza/shortest-acc-prof.png}
+		\caption{shortest path}
+	\end{subfigure}
+		\caption{Confronto dell'accelerazione per le tre strategie}
+		\label{fig:monza-acc-comparison}
+	\end{center}
+\end{figure}
 
+% ================== Tempo di Esecuzione ===============================
 \section{Tempo di Esecuzione} % NOTE: Tempo di Risoluzione
 Un aspetto interessante che è stato analizzato è il tempo di esecuzione per ogni algoritmo. In generale
 si è sperimentato un tempo tra pochi secondi e alcuni minuti dal lancio del solutore fino
