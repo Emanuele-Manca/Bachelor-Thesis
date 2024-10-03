@@ -8,23 +8,23 @@
 
 \section{F1TENTH}
 F1TENTH è una community internazionale di ricercatori, ingegneri e appassionati di sistemi autonomi
-che organizza competizioni di corsa di macchinine con la peculiare caratteristica
+che organizza competizioni di corsa di veicoli-robot con la peculiare caratteristica
 di essere \textit{un decimo} di quelle di F1, da cui il nome.
 \begin{wrapfigure}{r}{0.3\textwidth}
 	\centering
 	\includegraphics[width=0.2\textwidth]{f1tenth-car.png}
-	{\footnotesize Macchinina di F1TENTH}
+	{\footnotesize \\Robot di F1TENTH \cite{overview}}
 \end{wrapfigure}
 Oltre a questo, promuove la ricerca nell'ambito della guida autonoma
 e altri campi tra cui reinforcement learning, sistemi di comunicazione e robotica;
-offre, inoltre, corsi gratuiti online e una infrastruttura per imparare a costruire l'auto da corsa
-e sviluppare il software necessario per farla gareggiare. \cite{ftenth-web}
+offre, inoltre, una infrastruttura per costruire l'auto da corsa
+e sviluppare il software necessario per farla gareggiare. \cite{f1tenth-web}
 
 La community è stata fondata all'Università della Pennsylvania nel 2016 ma ha iniziato rapidamente
 collaborazioni con altre istituzioni e università in tutto il mondo~--~in Italia, alla data di stesura, solo
-con l'Università degli Studi di Modena e Reggio Emilia.
+con l'Università degli Studi di Modena e Reggio Emilia. \cite{f1tenth-about}
 
-\paragraph{I corsi}
+\paragraph{Moduli}
 Il percorso di apprendimento, che ha materiale per un semestre circa,
 % https://f1tenth.org/learn.html},
 raggruppa le lezioni in moduli e li integra con altrettanti laboratori guidati
@@ -49,7 +49,7 @@ dove poter applicare le nozioni e algoritmi imparati.
 	\item \textit{Modulo E} -- Vision:\\
 	      Introduzione a Classical Perception, differenze hardware, stima della distanza, visual SLAM,
 	      percezione basata su ML, object detection;
-	\item \textit{Modulo F} -- Argomenti speciali: \textit{Raceline Optimization}, MPC:\\
+	\item \textit{Modulo F} -- Argomenti speciali: \textbf{\textit{Raceline Optimization}}, MPC:\\
 	      Ottimizzazione del percorso di gara, Model Predictive Control e Moral Decision Making;
 	\item \textit{Modulo G} -- Applicazione delle tecnologie descritte su gara simulata;
 \end{itemize}
@@ -60,18 +60,12 @@ ovvero l'auto e soprattutto sensori di visione come telecamere e LiDAR.
 
 \paragraph{F1TENTH gym}
 \label{par:gym}
-% TODO: da rivedere
 % https://docs.google.com/presentation/d/1zfzzjVTbXNIZ75BFtGEwQBJRHlY95VKkFQjJhYfznpI/edit#slide=id.g1cca33b1c19_0_3213
-La community sviluppa e mantiene un simulatore open-source specifico per F1TENTH
-% \footnote{https://github.com/f1tenth/f1tenth_gym_ros},
+La community sviluppa e mantiene un simulatore open-source specifico per F1TENTH \cite{f1tenth-gym}
 in modo da poter sviluppare e testare comodamente
-senza l'uso di hardware specifico definito per la costruzione della macchinina.\\
-Il simulatore definisce la dinamica del veicolo in modo tale da avere una simulazione
-più reale possibile % Sim2Real problem
-% e grazie a ROS e rviz (che sta per ROS Visualizer)
-
-% NOTE: parlare dei laboratori svolti?
-% \subsection{Laboratori}
+senza l'uso di hardware specifico definito per la costruzione del robot.\\
+Il simulatore permette di definire la dinamica del veicolo in modo tale da avere una simulazione
+più reale possibile. 
 
 
 % ================== Autonomous Driving Pipeline =======================
@@ -80,10 +74,10 @@ più reale possibile % Sim2Real problem
 Un progetto ben strutturato è più efficiente da mantenere e ha maggiori probabilità
 di funzionare correttamente: ciò si applica anche in questo caso.\\
 Un progetto complesso come quello dei veicoli autonomi deve essere suddiviso in sotto-problemi
-più specifici e in modo tale che composti insieme risultino nella soluzione del problema.
-\par
+più specifici e in modo tale che uniti insieme risultino nella soluzione del problema.
 
-\noindent Il \emph{software} per i veicoli autonomi segue un ciclo di operazioni
+\bigskip
+\noindent Il \emph{software} per i veicoli autonomi segue un \textit{ciclo} di operazioni
 in cui il prodotto di una fase è input della successiva; si identificano in ordine tre fasi:
 \begin{enumerate}
 \item \textbf{Perception} -- Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a sè,
@@ -98,32 +92,30 @@ L'input per la prima fase (\textit{Perception}) e l'ouput dell'ultima (\textit{C
 è direttamente l'hardware: dunque nella prima sono i sensori ottici e radar, come citato precedentemente,
 mentre nella seconda sono gli attuatori per i controllo della velocità e angolo delle ruote.
 
-Il risultato che si vuole ottenere, quindi, è quello di una sequenza di comandi di sterzata e accelerazione
-in un contesto, quello delle corse, che richiede una certa velocità di esecuzione per poter essere
-il più reattivi possibile, dunque si tende ad eseguire il ciclo tra le 20 e 50 volte al secondo.
+Il risultato che si vuole ottenere, quindi, è quello di una sequenza di comandi di sterzata e
+accelerazione in un contesto, quello delle corse, che richiede una certa velocità di esecuzione per poter
+essere il più reattivi possibile, per questo motivo è preferibile eseguire il ciclo tra le 20 e 50 volte
+al secondo. Una rappresentazione grafica della pipeline intera si trova alla figura~\ref{fig:av-pipeline}.
 
-\noindent Una rappresentazione grafica della pipeline intera si trova alla figura \ref{fig:av-pipeline}\\
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
-\caption{Pipeline per i veicolo autonomi}
+\caption{Pipeline per i veicolo autonomi \cite{overview}}
 \includegraphics[width=\textwidth]{AV-pipeline.png}
 \label{fig:av-pipeline}
 \end{figure}
 
-Analizziamo più nel dettaglio le fasi sopra citate.
-\subsection{Perception}
-% fonte: https://www.researchgate.net/publication/358632526_Autonomous_Vehicles_on_the_Edge_A_Survey_on_Autonomous_Vehicle_Racing
-% paragrafo perception
-La prima fase ha il compito di analizzare i dati prodotti da diversi tipi di sensori come quelli
-ottici, laser e IMU (Inertial Measurment Unit) e ha come obiettivi quelli di:
+Di seguito si analizzano più nel dettaglio le fasi sopra citate.
+\subsection{Perception} 
+La prima fase ha il compito di \textit{analizzare} i dati prodotti da diversi tipi di sensori come quelli
+ottici, laser e IMU (Inertial Measurment Unit) e ha come obiettivi quelli di: \cite{betz2022autonomous}
 \begin{itemize}
 	\item determinare l'ambiente statico, chiamato anche \textit{mappa}, che in questo contesto
 	      rappresenta i confini del tracciato in cui il robot gareggia;
 	\item eventuali ostacoli o altri robot rivali, che quindi compongono la
-	      parte dinamica; \item \textit{localizzarsi} all'interno della mappa, ovvero
+	      parte dinamica; 
+	\item \textit{localizzarsi} all'interno della mappa, ovvero
 	      determinare posizione e orientamento del robot rispetto alla mappa.
 \end{itemize}
-
 In questa fase, quindi, si ritrovano algoritmi di object detection -- di cui però non è stato argomento
 di studio per questa tesi -- algoritmi di mapping e localization, come Particle Filter e SLAM
 (\textit{S}imultaneous \textit{L}ocalization \textit{A}nd \textit{M}apping).
@@ -131,23 +123,23 @@ di studio per questa tesi -- algoritmi di mapping e localization, come Particle 
 \paragraph{Localization}
 % https://docs.google.com/presentation/d/1EAzm9A7FbAZFmA8l3ZNb2qjY_GqrLP0r-0uYwL0lLfs/edit#slide=id.g11505ea6fbe_0_901
 Sebbene possano essere sfruttate tecnologie come il GPS, la ricerca nelle corse autonome si concentra
-maggiormente su una soluzione che richieda solo l'uso di sensori ottici, laser e odometria. \cite{betz2022autonomous}
-Per effettuare la localizzazione del robot è necessario avere un modello della mappa.
+maggiormente su una soluzione che richieda solo l'uso di sensori ottici, laser e odometria.
+\cite{betz2022autonomous} Per effettuare la localizzazione del robot è necessario avere un modello della
+mappa.
 
 Una prima soluzione potrebbe essere quella di partire da una posizione nota e di calcolare la posizione
-successiva integrando le misurazioni dei vari sensori e l'odometria delle ruote: questa tecnica
-viene chiamata \textit{Dead Reckoning} e, sebbene possa funzionare correttamente in un simulatore, nella
-realtà le misurazioni dei sensori contengono del rumore e l'odometria delle ruote generalmente non ha
-la precisione richiesta per via di un possibile slittamento delle ruote stesse: tutto ciò, quindi,
-introduce nei calcoli degli errori che si accumulano col tempo, portando a risultati errati.
+successiva integrando le misurazioni dei vari sensori e l'odometria delle ruote: questa tecnica viene
+chiamata \textit{Dead Reckoning} e, sebbene possa funzionare correttamente in un simulatore, nella realtà
+le misurazioni dei sensori contengono del rumore e l'odometria delle ruote generalmente non ha la
+precisione richiesta per via di un possibile slittamento delle ruote stesse: tutto ciò, quindi, introduce
+nei calcoli degli \textit{errori} che si accumulano col tempo, portando a risultati errati.
 
-La soluzione è quella di rendere più robusti i calcoli tenendo conto del rumore dell'odometria e dei sensori
-e compensare alla mancanza di informazioni riguardo la posizione iniziale. Gli algoritmi modellano questo
-aspetto usando il \textit{calcolo delle probabilità}. I principali sono: il già citato Particle Filter,
-noto anche come AMCL (Adaptive Monte Carlo Localization) e principale algoritmo di localization usato 
-nello studio di questa tesi e nei laboratori, filtro di Bayes e derivati come Kalman filter.
-
-% NOTE: parlare di particle filter?
+La soluzione è quella di rendere più robusti i calcoli tenendo conto del rumore dell'odometria e dei
+sensori e compensare alla mancanza di informazioni riguardo la posizione iniziale. Gli algoritmi
+modellano questo aspetto usando il \textit{calcolo delle probabilità}. I principali sono: il già citato
+Particle Filter, noto anche come AMCL (Adaptive Monte Carlo Localization) e principale algoritmo di
+localization usato nello studio di questa tesi e nei laboratori, filtro di Bayes e derivati come Kalman
+filter.
 
 \paragraph{SLAM}
 \label{par:slam}
@@ -169,7 +161,7 @@ Ad alto livello, l'algoritmo segue questi passaggi:
 
 \subsection{Planning}
 La fase di Planning è stata argomento di studio approfondito di questa tesi, perciò verrà descritta
-completamente nel Capitolo \ref{chap:plan} (pag. \pageref{chap:plan})
+completamente nel Capitolo~\ref{chap:plan} a pag.~\pageref{chap:plan}.
 
 \subsection{Control}
 La terza fase prevede di attuare le decisioni calcolate nella fase di planning: deve quindi generare, in
@@ -182,17 +174,14 @@ I principali problemi che bisogna affrontare in questa fase sono:
 	\item[$-$] come compensare gli errori degli attuatori?
 	\item[$-$] come guidare il più velocemente possibile?
 \end{itemize}
-
 Si fanno distinzione di due tipologie di algoritmi di controllo: gli \textit{open-loop} e
 \textit{closed-loop}, chiamati anche feedback. In questo contesto, la differenza tra i due è che la
 seconda tipologia di algoritmi riceve in input, appunto in \textit{feedback}, anche lo stato corrente del
 veicolo rispetto agli output di controllo generati precedentemente; in questo modo è possibile calcolare
 l'errore tra il comando calcolato e l'effettivo risultato dell'applicazione di quel comando dagli
-attuatori così da poterlo compensare al prossimo comando inviato.
+attuatori, così da poterlo compensare al prossimo comando inviato.
 
-\paragraph{PID Controller}
-% https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
-% lezione 4
+\paragraph{PID Controller} \cite{lection04, pid-wiki}
 L'algoritmo più conosciuto, specialmente per la sua semplicità, è il \textit{PID Controller} che viene
 usato ampiamente in tutta l'industria dell'ingegneria del controllo, non solo in questo contesto.\\
 PID è un acronimo che sta per \textbf{P}roportional-\textbf{I}ntegral-\textbf{D}erivative e questo
@@ -206,18 +195,18 @@ Infine, con \textbf{integrale} si applica un'ulteriore correzione calcolata sia 
 dell'errore sia dalla sua durata nel tempo, ovvero si correggono gli errori accumulati nel tempo che
 avrebbero dovuto essere corretti prima.
 
-\paragraph{Pure Pursuit}
+\paragraph{Pure Pursuit} \cite{lection10}
 Un'altro algoritmo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
-problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un tracciato, che il
-robot deve seguire. L'Algoritmo tiene conto della dinamica del veicolo, che in questo caso è
-non-olonomico, quindi calcola l'arco che congiunge il robot e il primo waypoint che si trova ad una
-distanza prefissata, il lookahead, dalla macchina.
+problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un \textit{tracciato},
+che il robot deve seguire. L'algoritmo tiene conto della dinamica del veicolo, che in questo caso è
+\textit{non-holonomic}, quindi calcola l'arco che congiunge il robot e il primo waypoint che si trova ad
+una distanza prefissata, il lookahead, dalla macchina.\\
 Questo è stato il principale algoritmo usato nei laboratori e nello studio della tesi, seppur con qualche
 modifica migliorativa.
 
 
 % ================== ROS 2 ================================
-\section{ROS2}
+\section{ROS2 \cite{scirobotics}}
 \label{sec:ros}
 % cit: https://docs.ros.org/en/humble/Citations.html
 % https://www.ros.org/blog/ecosystem/
@@ -228,45 +217,46 @@ modifica migliorativa.
 ROS è un acronimo che sta per \textbf{R}obot \textbf{O}perating \textbf{S}ystem e,
 sebbene il nome possa trarre in inganno, non è un sistema operativo nel senso tradizionale,
 bensì si presenta come un mediatore -- un \textbf{middleware} -- tra l'applicazione robot
-e l'hardware del robot, ma non sostituisce il sistema operativo sottostante.
-% https://www.ros.org/blog/ecosystem/
+e l'hardware del robot, ma non sostituisce il sistema operativo sottostante. \cite{ros-ecosystem}
 
 Viene usato da tutta l'industria della robotica per via della sua alta modularità:
 dalla ricerca all'insegnamento, da progetti di un gruppo di persone a progetti più importanti
 di grosse aziende. ROS fornisce i \textit{building blocks} da usare così da facilitare e velocizzare
 la realizzazione dell'applicativo e fornisce un metodo di comunicazione efficiente tra le varie componenti.
 
-Il progetto è open-source ed ha una grossa community di sviluppatori e ricercatori internazionale
-che lo mantiene e distribuisce pacchetti integrativi per diverse funzionalità: driver per i sensori
-e attuatori, algoritmi noti, compatibilità con altri programmi, visualizzazioni in tempo reale
-e tante altre funzioni di utilità. In questo senso, ROS si presenta più simile a un SDK 
-(Software Development Kit) accompagnato da una serie di tools, principalmente a linea di comando.
+Il progetto è \href{https://github.com/ros}{\textit{open-source}} ed ha una grossa community di
+sviluppatori e ricercatori internazionale che lo mantiene e distribuisce pacchetti integrativi per
+diverse funzionalità come driver per i sensori e attuatori, algoritmi noti, compatibilità con altri
+programmi, visualizzazioni in tempo reale e tante altre funzioni di utilità. In questo senso, ROS si
+presenta più simile a un \textit{SDK} (Software Development Kit) accompagnato da una serie di tools,
+principalmente a linea di comando.
 
-ROS viene rilasciato con la stessa filosofia delle \textit{distro linux}, con più distribuzioni
-mantenute nello stesso tempo. Va notato che le differenze tra ROS e ROS2 sono profonde differenze di
-design e aggiornamento delle tecnologie come, per esempio, l'aggiornamento dei linguaggi supportati,
-il sistema di build e importanti modifiche alla gestione dei \hyperref[ros:msgs]{messaggi} e servizi.
+ROS viene rilasciato con la stessa filosofia delle \textit{distro linux}, con più distribuzioni mantenute
+nello stesso tempo. Va notato che le differenze tra ROS e ROS2 sono profonde differenze
+di design e aggiornamento delle tecnologie come, per esempio, l'aggiornamento dei linguaggi supportati,
+il sistema di build e importanti modifiche alla gestione dei \hyperref[ros:msgs]{messaggi} e servizi. \cite{ros-diff}
 Attualmente, ROS e ROS2 supportano due linguaggi: C++ e Python. In questa tesi è stato usato Python.
 Durante lo studio di questa tesi è stato usato ROS2, distribuzione
-\href{https://docs.ros.org/en/humble/}{\textit{"Humble"}},
-per necessità di compatibilità con alcuni pacchetti.
+\href{https://docs.ros.org/en/humble/}{\textit{"Humble"}}, per necessità di compatibilità con alcuni
+pacchetti.
 
 \bigskip
-ROS, fondamentalmente, fornisce un metodo di comunicazione tra le componenti dell'applicativo, che
-vengono chiamati \hyperref[ros:nodes]{\textbf{\textit{Nodi}}}, attraverso diversi sistemi tra cui i
-\hyperref[ros:topics]{\textbf{\textit{Topic}}}, i \textit{Servizi} e le \textit{Azioni}.
-L'insieme dei nodi e dei loro collegamenti formano il \textit{ROS~Graph}, il grafo dei nodi.
+\noindent ROS, fondamentalmente, fornisce un metodo di comunicazione tra le componenti dell'applicativo,
+che vengono chiamati \hyperref[ros:nodes]{\textbf{\textit{Nodi}}}, attraverso diversi sistemi tra cui i
+\hyperref[ros:topics]{\textbf{\textit{Topic}}}, i \hyperref[ros:srv-act]{\textit{Servizi} e le
+\textit{Azioni}}. L'insieme dei nodi e dei loro collegamenti formano il \textit{ROS~Graph}, il grafo dei
+nodi.
 
 \medskip
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{ros-topic-srv.png}
-	\caption{Esempio di ROS Graph}
+	\caption{Esempio di ROS Graph \cite{lection01}}
 	\label{fig:ros-topic-srv}
 \end{figure}
 \noindent Di seguito si analizzano le componenti principali di cui ROS è composto.
 % https://docs.ros.org/en/iron/Concepts/Basic.html
-\paragraph{Nodi \cite{undr-nodes} \cite{ros-nodes}} 
+\paragraph{Nodi \cite{undr-nodes, ros-nodes}} 
 \label{ros:nodes}
 % https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html
 % https://docs.ros.org/en/iron/Concepts/Basic/About-Nodes.html
@@ -277,7 +267,7 @@ dei laser o implementare un algoritmo come Pure Pursuit.
 Un completo sistema robotico comprende, quindi, un insieme di nodi che lavorano congiuntamente, spesso
 contenuti nello stesso eseguibile.\\
 
-\paragraph{Topic}
+\paragraph{Topic \cite{undr-topics, ros-topics}}
 \label{ros:topics}
 % https://docs.ros.org/en/iron/Concepts/Basic/About-Topics.html
 % https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html
@@ -295,7 +285,7 @@ per inviare e ricevere dati da altri componenti del grafo: si può avere quindi 
 uno, uno a molti, molti a uno e molti a molti.\\
 I topic vengono identificati da una stringa univoca che ne rappresenta il nome.
 
-\paragraph{Messaggi}
+\paragraph{Messaggi \cite{ros-message}}
 \label{ros:msgs}
 % https://docs.ros.org/en/iron/Concepts/Basic/About-Interfaces.html#messages
 I messaggi sono l'\textit{interfaccia}, agnostica al linguaggio, con la quale i \hyperref[ros:nodes]{nodi}
@@ -304,7 +294,7 @@ file con estensione \verb|.msg|. Questo tipo di file contiene una lista di attri
 tipo dell'attributo, nome ed eventuale valore di default. Il tipo può essere un tipo base
 (\verb|short|, \verb|double|, \verb|string|) o un tipo composto, ovvero un'altro tipo messaggio.
 
-\paragraph{Parametri e Launch files}
+\paragraph{Parametri e Launch files \cite{ros-params, ros-launch}}
 % https://docs.ros.org/en/humble/Concepts/Basic/About-Launch.html
 % https://docs.ros.org/en/humble/Concepts/Basic/About-Parameters.html
 É possibile parametrizzare i nodi in modo da configurarli sia all'avvio sia durante l'esecuzione
@@ -318,20 +308,20 @@ parametri (per esempio da CLI), a patto che venga gestito nel codice del nodo.
 I launch file possono essere usati anche per avviare più nodi contemporaneamente, in modo da
 automatizzare l'intero applicativo.
 
-\paragraph{Services e Actions}
+\paragraph{Services e Actions \cite{ros-services, ros-actions}}
+\label{ros:srv-act}
 % https://docs.ros.org/en/humble/Concepts/Basic/About-Actions.html
 % https://docs.ros.org/en/humble/Concepts/Basic/About-Services.html
 Altri due sistemi di comunicazioni fra \hyperref[ros:nodes]{nodi} sono i Servizi e le Azioni.
-% NOTE: aggiustare "ad altri nodi" per non interrompere il flusso di lettura
 Questi sono sostanzialmente chiamate remote -- ovvero ad altri nodi -- a procedure seguendo il paradigma
 client/server. La loro principale differenza è concettuale e si discrimina dalla velocità di esecuzione:
 nei servizi, infatti, la risposta deve essere rapida, mentre nelle azioni ci si aspetta una esecuzione
 più lunga, anche di minuti, e si ha la possibilità di cancellarla prima del suo termine.
+Entrambi vengono definiti con strutture simili ai messaggi, con file di diversa estensione.
 
 Per citare qualche esempio, nei servizi troviamo operazioni di trasformazioni di coordinate tra frame, mentre
 nelle azioni operazioni di più alto livello come \textit{"raggiungi questo waypoint"}.
 
-Entrambi vengono definiti con strutture simili ai messaggi, con file di diversa estensione.
 
 \bigskip
 

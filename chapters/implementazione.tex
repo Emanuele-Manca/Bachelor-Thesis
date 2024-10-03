@@ -6,27 +6,30 @@
 In questo capitolo verranno descritti i passaggi implementati per generare la raceline ottima data una
 mappa.
 
-Il lavoro svolto è stato basato sulla seguente repository GitHub:
-\url{https://github.com/CL2-UWaterloo/Raceline-Optimization}.
+Nel corso dello studio di questa tesi, è stato integrato un fork
+\footnote{https://github.com/CL2-UWaterloo/Raceline-Optimization} della repository ufficiale del paper
+citato \cite{christ2021time}, utilizzandolo come base di partenza. Si è condotta un'analisi del codice
+sorgente, identificando le parti rilevanti per lo scopo e apportando delle modifiche e
+personalizzazioni per adattarlo al contesto. Questo ha permesso di ottimizzare le funzionalità
+esistenti e di implementare ulteriori miglioramenti, garantendo così che il codice rispondesse alle
+necessità dello studio.
 
 \bigskip
 \noindent I passaggi ad alto livello sono i seguenti:
 \begin{enumerate}
-	\item Ottenere l'immagine di una mappa (per esempio attraverso \hyperref[par:slam]{SLAM});
-	\item Eventualmente ripurla di imperfezioni e ottenere un circuito chiuso; 
-	\item Generare la centerline e calcolare la larghezza del circuito;
-	\item Applicare gli algoritmi di generazione della raceline;
+	\item ottenere l'immagine di una mappa (per esempio attraverso \hyperref[par:slam]{SLAM});
+	\item eventualmente ripurla di imperfezioni e ottenere un circuito chiuso; 
+	\item generare la centerline e calcolare la larghezza del circuito;
+	\item applicare gli algoritmi di generazione della raceline;
 \end{enumerate}
-
 %TODO:spiegare occupancy grid?
-La mappa digitalizzata in file immagine che rappresenta una occupancy grid, mentre
-i percorsi, che siano raceline o centerline, sono in formato csv con almeno due colonne rappresentanti la
-posizione $(x,y)$ di ogni sample e almeno una terza colonna per la velocità per quanto riguarda la
-raceline. Successivamente si è scelto di esportare anche l'orientamento del robot rispetto alla mappa e
-l'accelerazione per ogni sample.
-
-\bigskip
-\noindent Di seguito si indicano le specifiche della macchina usata durante questa tesi:
+La mappa viene digitalizzata in file immagine che rappresenta una \textit{occupancy grid}, mentre i
+percorsi, che siano raceline o centerline, sono in formato csv con due colonne rappresentanti la
+posizione $(x,y)$ di ogni sample, nel caso sia una centerline, e una terza colonna per la velocità per
+quanto riguarda la raceline ed eventualmente ulteriori colonne per altri valori come l'accelerazione e
+l'angolo di sterzata.
+\newpage
+Di seguito si indicano le specifiche della macchina usata durante questa tesi:
 \begin{itemize}
 	\item[-] \textit{OS}: Ubuntu 22.04.4 LTS (Jammy Jellyfish)
 	\item[-] \textit{Kernel}: 6.8.0-40 generic x86\_64
@@ -45,12 +48,12 @@ dei circuiti da gara più famosi forniti da F1TENTH stesso \cite{f1tenth-gitmaps
 \begin{figure}[H]
 	\begin{minipage}[c]{0.47\textwidth}
 		\includegraphics[width=1\textwidth]{slam_map.png}
-		\caption{\raggedright Mappa risultante da SLAM}
+		\caption{\raggedright Mappa risultante da SLAM \cite{stevengong} }
 		\label{fig:slam_map}
 	\end{minipage}\hfill
 	\begin{minipage}[c]{0.47\textwidth}
 		\includegraphics[width=1\textwidth]{slam_map_mod.png}
-		\caption{Modifica dell'immagine \ref{fig:slam_map} per creare un circuito chiuso}
+		\caption{Modifica dell'immagine \ref{fig:slam_map} per creare un circuito chiuso \cite{stevengong} }
 		\label{fig:slam_map_mod}
 	\end{minipage}
 \end{figure}
@@ -68,13 +71,14 @@ dall'algoritmo EDT. Prendendo come riferimento il circuito di Monza all'immagine
 risultato dell'algoritmo si può vedere all'immagine \ref{fig:monza-edt}.
 
 \begin{figure}[H]
-	\begin{minipage}[c]{1\textwidth}
+	\begin{center}
 		\includegraphics[width=1\textwidth]{edt-ex.png}
 		\caption{Esempio di applicazione dell'agortimo EDT su una immagine binaria, l'immagine a destra
-		mostra il risultato indicando la distanza euclidea dal background per ogni pixel}
+		mostra il risultato indicando la distanza euclidea dal background per ogni pixel \cite{stevengong-edt} }
 		\label{fig:edt-ex}
-	\end{minipage}\hfill
-	\vspace{1cm}
+	\end{center}
+\end{figure}
+\begin{figure}[H]
 	\begin{minipage}[c]{0.47\textwidth}
 		\includegraphics[width=1\textwidth]{monza-binary.png}
 		\caption{Immagine della occupancy grid binaria del circuito di Monza}
