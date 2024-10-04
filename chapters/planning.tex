@@ -2,10 +2,10 @@
 \chapter{Planning}
 \label{chap:plan}
 
-In questo capito si andaranno ad analizzare i compiti della seconda fase all'interno del ciclo della
+In questo capito si andranno ad analizzare i compiti della seconda fase all'interno del ciclo della
 \hyperref[sec:pipeline]{pipeline dei veicoli autonomi}, ovvero il planning. In questa fase viene inserito
 l'argomento di studio di questa tesi: l'ottimizzazione della traiettoria globale.
-Il planning, come suggerisce il nome, ha il compito di pianificare le mosse successive del robot affinchè
+Il planning, come suggerisce il nome, ha il compito di pianificare le mosse successive del robot affinché
 possa spostarsi in modo ottimale evitando eventuali ostacoli.
 
 \bigskip
@@ -27,7 +27,7 @@ L'oggetto di questa tesi, l'ottimizzazione della traiettoria di corsa, rientra n
 \paragraph{\textit{Workspace} vs \textit{Configuration Space}} \ \\
 Si distinguono due rappresentazioni degli ostacoli e dell'ambiente: il workspace rappresenta tutte le
 azioni possibili a un robot, si pensi al volume occupato da tutti i possibili movimenti di un braccio
-meccanico, mentre il conifuration space, detto anche C-space, rappresenta tutte le possibili
+meccanico, mentre il configuration space, detto anche C-space, rappresenta tutte le possibili
 configurazioni di una data definizione di stato. In questo contesto, all'atto pratico, ciò si traduce che
 nel secondo la rappresentazione dell'ambiente e degli ostacoli tiene già conto della dimensione del
 robot e quindi quest'ultimo può essere considerato come un singolo punto, mentre ciò non accade nel
@@ -54,12 +54,12 @@ orizzonte finito evitando collisioni con l'ambiente ed eventuali avversari. Gli 
 differenziano per tre categorie principali di risoluzione:
 \begin{enumerate}
 	\item Applicando modifiche la raceline globale; 
-	\item Generando diverse traiettorie vincolate alla dinamica del robot e scengliendo quella migliore;
+	\item Generando diverse traiettorie vincolate alla dinamica del robot e scegliendo quella migliore;
 	\item Campionando lo spazio libero e trovando un percorso attorno agli ostacoli.
 \end{enumerate}
 Nella prima categoria rientrano, generalmente, algoritmi che si basano su MPC che, sebbene sia un
 algoritmo di controllo ottimale, può essere adattato e utilizzato per ricercare il percorso ottimo per
-evitare un'ostacolo o per migliorare la traiettoria della raceline gloabale di riferimeto in base alla
+evitare un ostacolo o per migliorare la traiettoria della raceline globale di riferimento in base alla
 posizione attuale del veicolo.
 
 Nella seconda categoria ricadono algoritmi che calcolano, fino a un dato orizzonte temporale, lo stato
@@ -83,7 +83,7 @@ hanno la possibilità di descrivere la dinamica del robot.
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{state-lattice.png}
 	\end{center}
-	\caption{Esempio grafico dell'algoritmo State Lattice \cite{lection11}}
+	\caption{Esempio grafico dell'algoritmo State Lattice \cite{state-lattice}}
 	\label{fig:state-lattice}
 \end{figure}
 
@@ -99,7 +99,7 @@ viene quindi scelto la traiettoria col costo minore.
 
 Nel secondo caso vengono sfruttate metodologie della teoria dei giochi per trovare l'azione migliore in
 un ambiente con due o più giocatori. Il problema viene trasformato in gioco competitivo asincrono dove un
-singolo giocatore può "muoversi" per volta. Questi approcci spesso includono nel cacolo della soluzione il
+singolo giocatore può "muoversi" per volta. Questi approcci spesso includono nel calcolo della soluzione il
 concetto di \textit{regret} per trovare la migliore risposta per vincere la gara.
 
 \section{Global Planner}

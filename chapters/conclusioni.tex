@@ -1,3 +1,41 @@
 \chapter{Conclusioni}
 
+Di seguito si discute dei risultati ottenuti durante l'analisi ed eventuali sviluppi futuri.
 
+\section{Risultati ottenuti}
+Lo studio di questa tesi si è concentrato sulle soluzioni trovate in letteratura per l'ottimizzazione del
+\textit{percorso globale} data la mappa di un circuito. Nello specifico, sono state analizzate \textit{tre strategie} di
+ottimizzazione: il percorso più breve, il percorso con la curvatura minima e il percorso con il lap time
+minore. Le tre strategie vengono modellate secondo un problema di controllo ottimale.
+
+Dalle analisi svolte e da sperimentazioni svolte con il simulatore è emerso che la formulazione delle
+prime due strategie risulta troppo semplice per poter essere applicata anche in un simulatore: nel caso
+della curvatura minima, sebbene sia l'obiettivo della strategia, la velocità mediana è troppo alta -- nel
+caso in cui la massima sia impostata in egual modo per tutte le tre strategie -- mentre per il percorso
+con lunghezza minima la traiettoria risultante è troppo vicina ai bordi e perciò difficile da far
+seguire ad un controller. I risultati migliori sono stati ottenuti dalla strategia del tempo minimo,
+principalmente perchè integra i coefficienti d'attrito tra gli pneumatici e la strada, dunque risulta un
+modello più realistico, soprattutto nel caso come questo, dove si spinge il veicol ai suoi limiti.
+
+
+\section{Sviluppi futuri}
+Un possibile miglioramento è sicuramente quello di raffinare meglio i parametri degli algoritmi, in modo
+tale che producano traiettorie praticabili: dunque diminuire la velocità massima per la strategia
+mincurv, o comunque trovare una relazione tra quella massima delle altre due e quella di mincurv, e
+aumentare il distanziamento tra il bordo del circuito e la traiettoria così da permettere il passaggio
+del veicolo. Inoltre, si potrebbe ulteriormente aggiornare la modellazione del problema di QP sottostante
+inserendo nuovi vincoli.
+
+Un ulteriore approccio alla risoluzione del problema è quello di implementare e analizzare algoritmi di
+ottimizzazione basati su \textit{strategie evolutive}, come il già citato CMA-ES (cap.~\ref{chap:opt}
+pag.~\pageref{chap:opt}). \cite{lection22} In generale, è possibile esplorare anche altri algoritmi di
+ottimizzazione matematica.
+
+\bigskip
+\noindent Un problema comune in questi contesti è quello che viene chiamato \textit{Sim2Real}, ovvero quello di \textit{trasportare}
+il lavoro svolto dal simulatore, o comunque da un modello teorico, alla realtà. Il modello è una
+semplificazione della realtà, e in alcuni casi questo può portare ad un comportamento errato se portato
+direttamente in hardward. Il passaggio da simulatore a realtà spesso è seguito da un ulteriore fase di
+tuning dei parametri degli algoritmi così da adattarli al meglio alla complessità della realtà. Un
+possibile sviluppo futuro, dunque, potrebbe essere quello di costruire il robot e implementare il lavoro
+svolto in simulazione, testarlo ed adattarlo.

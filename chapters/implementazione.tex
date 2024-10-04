@@ -18,7 +18,7 @@ necessità dello studio.
 \noindent I passaggi ad alto livello sono i seguenti:
 \begin{enumerate}
 	\item ottenere l'immagine di una mappa (per esempio attraverso \hyperref[par:slam]{SLAM});
-	\item eventualmente ripurla di imperfezioni e ottenere un circuito chiuso; 
+	\item eventualmente ripulirla di imperfezioni e ottenere un circuito chiuso; 
 	\item generare la centerline e calcolare la larghezza del circuito;
 	\item applicare gli algoritmi di generazione della raceline;
 \end{enumerate}
@@ -37,12 +37,12 @@ Di seguito si indicano le specifiche della macchina usata durante questa tesi:
 	\item[-] \textit{RAM}: 16GB
 \end{itemize}
 
-\section{Generazione centeline}
-Affinchè l'algoritmo per l'estrazione della linea di riferimento restituisca un risultato corretto, come
+\section{Generazione centerline}
+Affinché l'algoritmo per l'estrazione della linea di riferimento restituisca un risultato corretto, come
 detto in precedenza, l'immagine della mappa deve rappresentare un circuito chiuso e con bordi ben
 definiti e lisci, come effettivamente sarebbe un circuito di F1.
-Dunque se si acquisice una mappa con SLAM come in figura \ref{fig:slam_map} è necessario modificarla come
-in figura \ref{fig:slam_map_mod}. Durante l'implentazione di questa tesi si è deciso di usare le mappe
+Dunque se si acquisisce una mappa con SLAM come in figura \ref{fig:slam_map} è necessario modificarla come
+in figura \ref{fig:slam_map_mod}. Durante l'implementazione di questa tesi si è deciso di usare le mappe
 dei circuiti da gara più famosi forniti da F1TENTH stesso \cite{f1tenth-gitmaps}.
 
 \begin{figure}[H]
@@ -66,14 +66,14 @@ Un esempio di applicazione di EDT si trova all'immagine \ref{fig:edt-ex}.
 
 Un aspetto da sottolineare è che le immagini fornite da F1TENTH rappresentano una occupancy grid
 ternaria, in cui il grigio corrisponde alle zone non esplorate; per sfruttare l'algoritmo sopra citato è
-necessario che i pixel grigi vengano convertiti in nero, perchè  è il valore considerato come background
+necessario che i pixel grigi vengano convertiti in nero, perché  è il valore considerato come background
 dall'algoritmo EDT. Prendendo come riferimento il circuito di Monza all'immagine \ref{fig:monza-binary}, il
 risultato dell'algoritmo si può vedere all'immagine \ref{fig:monza-edt}.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=1\textwidth]{edt-ex.png}
-		\caption{Esempio di applicazione dell'agortimo EDT su una immagine binaria, l'immagine a destra
+		\caption{Esempio di applicazione dell'algoritmo EDT su una immagine binaria, l'immagine a destra
 		mostra il risultato indicando la distanza euclidea dal background per ogni pixel \cite{stevengong-edt} }
 		\label{fig:edt-ex}
 	\end{center}
@@ -100,7 +100,7 @@ A questo punto è necessario campionare il percorso di un pixel trovato: partend
 percorso, si applica una ricerca DFS (Depth First Search) per trovare i successivi pixel bianchi. Dunque
 da un pixel del percorso, si cerca il primo pixel bianco in tutte le direzioni che non sia già stato
 esplorato: seguendo questo processo si ottengono le posizioni dei pixel e la loro distanza dai bordi, si
-trasformano nel frame della mappa e esportano queste informazioni in un csv contentente le colonne
+trasformano nel frame della mappa e esportano queste informazioni in un csv contenente le colonne
 \verb|x, y, width_left, width_right|.
 \vfill
 \begin{figure}[h]
@@ -118,7 +118,7 @@ trasformano nel frame della mappa e esportano queste informazioni in un csv cont
 Ad alto livello, l'ottimizzazione cerca iterativamente di aggiustare la centerline in modo tale da
 ottenere il risultato migliore, come spiegato nel capitolo \ref{chap:opt} (pag. \pageref{chap:opt}).
 Questa fase non richiede solamente di eseguire il programma solutore, ma è necessario
-configurare i parametri che l'algortimo usa. Questo compito si chiama \textit{tuning} dei parametri
+configurare i parametri che l'algoritmo usa. Questo compito si chiama \textit{tuning} dei parametri
 e consiste nel trovare quelli che meglio si adattano nel trovare la soluzione migliore.
 
 Durante lo studio di questa tesi il principale parametro modificato durante le prove è stato lo
@@ -135,7 +135,7 @@ Altri parametri fanno riferimento alla dinamica del veicolo, come angolo di ster
 massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza. Sono disponibili anche
 parametri specifici per il tipo di ottimizzazione, per esempio un valore aggiuntivo alla larghezza del
 veicolo che comprende un margine di sicurezza dai bordi del circuito. Di seguito si mostrano alcuni dei
-valori usati che descrivono le proprietà del veicolo indipendetemente dal tipo di ottimizzazione usato:
+valori usati che descrivono le proprietà del veicolo indipendentemente dal tipo di ottimizzazione usato:
 
 \begin{lstlisting}
 veh_params = {
@@ -180,7 +180,7 @@ In linea generale, si è riscontrato che:
 		per shortest path e mincurv, mentre per mintime sono necessari valori $> 1.0$ per evitare di
 		sforare le 2000 iterazioni;
 	\item \verb|stepsize_interp_after_opt| non incide in modo sostanziale sul tempo e per questo può
-		essere valorizzato in base alle necessità dell'algortimo che userà il percorso.
+		essere valorizzato in base alle necessità dell'algoritmo che userà il percorso.
 \end{itemize}
 A valori alti degli stepsize (es: $> 1.5$), può capitare che la raceline generata "tagli" il percorso per
 curve molto rapide, come nella chicane di Spa. Questo è capitato principalmente con l'algoritmo del
@@ -201,7 +201,7 @@ percorso più breve, come mostrato alla figura \ref{fig:taglio-spa}
 Altri parametri modificati durante le sperimentazioni sono qualità inerenti alle spline, principalmente
 lo smoothing factor. Quest'ultimo, se troppo basso e in concomitanza con valori di stepsize bassi, può
 generare delle linee ortogonali che si incrociano tra loro e che quindi non possono produrre un percorso
-corretto. Un esempio di questo caso è visibile all'immgine \ref{fig:norm-cross}. Durante le
+corretto. Un esempio di questo caso è visibile all'immagine \ref{fig:norm-cross}. Durante le
 sperimentazioni questo valore è stato fissato a 80.
 \newpage
 \noindent Di seguito si mostrano gli stepsize usati per generare il percorso a figura \ref{fig:taglio-spa}.

@@ -10,7 +10,19 @@ Monza.
 
 I dati usati in questo capitolo sono stati estrapolati solamente dai file di output dell'ottimizzazione
 e analizzati con l'uso di Jupyter Notebook.
-
+\begin{figure}[H]
+	\begin{center}
+	\begin{subfigure}[l]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{monza/raceline-parabolica.png}
+	\end{subfigure}
+	\begin{subfigure}[r]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{monza/curva-parabolica-foto-aerea.jpg}
+	\end{subfigure}
+	\end{center}
+	% \caption{Raceline generate per la curva parabolica di Monza}
+	% \label{fig:raceline-parabolica}
+\end{figure}
+\newpage
 \section{Metriche}
 Le metriche usate in questo studio sono le seguenti:
 \begin{itemize}
@@ -28,7 +40,7 @@ Ulteriori metriche di contesto sono la velocità, l'accelerazione e il tempo di 
 algoritmi.
 
 Per ogni mappa e per ogni strategia vengono confrontati laptime, curvatura mediana e la lunghezza del
-tracciato risultante. Si è scelta la curvatura mediana perchè quella media risultava sempre molto
+tracciato risultante. Si è scelta la curvatura mediana perché quella media risultava sempre molto
 vicino a zero e quindi poco significativa per effettuare un confronto. Egual discorso per
 l'accelerazione, che tende a bilanciarsi tra accelerazioni e decelerazioni; a questa vengono anche
 aggiunte la deviazione standard, l'accelerazione massima e minima. Viene poi indicata la velocità media,
@@ -109,7 +121,7 @@ velocità più alta in curva. Lo stesso è visivamente immediato osservando la f
 \ref{fig:spa-vel-comparison}, dove mincurv tende ad avere colori più verso il verde nelle curve rispetto
 alle altre due strategie.
 
-La deviazione standard delle tre strategie rimane pressochè simile: solo il percorso più breve ne riporta
+La deviazione standard delle tre strategie rimane pressoché simile: solo il percorso più breve ne riporta
 una più alta che è congrua anche con la variabilità dell'accelerazione nella tabella~\ref{tab:spa-ax}.
 
 Come è possibile notare dal grafico~\ref{fig:speed-graph-spa}, solo mintime non ha mai toccato la massima
