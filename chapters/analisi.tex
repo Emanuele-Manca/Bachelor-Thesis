@@ -1,4 +1,4 @@
-% ======================================================================
+L ======================================================================
 % col: 20
 
 \chapter{Analisi dei risultati}
@@ -26,20 +26,20 @@ e analizzati con l'uso di Jupyter Notebook.
 \section{Metriche}
 Le metriche usate in questo studio sono le seguenti:
 \begin{itemize}
-	\item Il tempo di percorrenza (laptime);
-	\item Lunghezza del tracciato prodotto;
-	\item Velocità; %media, mediana, minima e la sua deviazione standard;
-	\item Accelerazione; % mediana, massima e minima;
-	\item Curvatura; %mediana e la sua deviazione standard;
-	\item Tempo di esecuzione.
+	\item il tempo di percorrenza (lap time);
+	\item lunghezza del tracciato prodotto;
+	\item velocità; %media, mediana, minima e la sua deviazione standard;
+	\item accelerazione; % mediana, massima e minima;
+	\item curvatura; %mediana e la sua deviazione standard;
+	\item tempo di esecuzione.
 \end{itemize}
 Le metriche scelte permettono di confrontare le tre strategie considerando quale criterio 
-ottimizzano: il laptime per la strategia del percorso col tempo minimo, la lunghezza del tracciato per
+ottimizzano: il lap time per la strategia del percorso col tempo minimo, la lunghezza del tracciato per
 quella del percorso più corto e, infine, la curvatura per la strategia della curvatura minima.
 Ulteriori metriche di contesto sono la velocità, l'accelerazione e il tempo di esecuzione dei tre
 algoritmi.
 
-Per ogni mappa e per ogni strategia vengono confrontati laptime, curvatura mediana e la lunghezza del
+Per ogni mappa e per ogni strategia vengono confrontati lap time, curvatura mediana e la lunghezza del
 tracciato risultante. Si è scelta la curvatura mediana perché quella media risultava sempre molto
 vicino a zero e quindi poco significativa per effettuare un confronto. Egual discorso per
 l'accelerazione, che tende a bilanciarsi tra accelerazioni e decelerazioni; a questa vengono anche
@@ -57,7 +57,7 @@ Di seguito si mostrano le misurazioni per i due circuiti di Monza e Spa.
 	\label{tab:opt-spa}
 	\begin{center}
 		\begin{tabular} {l|c|c|c}
-			                & Laptime [$s$]  & Curvatura mediana [$\nicefrac{rad}{m}$] & Lunghezza [$m$]\\
+			                & Lap time [$s$]  & Curvatura mediana [$\nicefrac{rad}{m}$] & Lunghezza [$m$]\\
 			\hline
 			mintime         & \textit{76.25} & 0.10           & 545.41          \\
 			mincurv         & 49.22          & \textit{0.07 } & 546.87          \\
@@ -66,15 +66,16 @@ Di seguito si mostrano le misurazioni per i due circuiti di Monza e Spa.
 		\end{tabular}
 	\end{center}
 \end{table}
-Per quanto riguarda la curvatura e la lunghezza del circuito, le strategie di mincurv e shortest path
-effettivamente producono rispettivamente il risultato minore tra le strategie. Pare inaspettato il
-risultato per il tempo minimo, che è il più alto tra tutte le strategie, questo tuttavia è giustificato
-dalla migliore modellazione della dinamica del veicolo da parte dell'algoritmo: in questo senso, sebbene
-mincurv e shortest path abbiano un laptime minore, questo è anche meno affidabile rispetto al mintime. Il
-laptime viene calcolato sommando il tempo di percorrenza tra un sample e il successivo assumendo che la
-velocità rimanga costante tra questi due: dunque un tracciato con una velocità media più alta risulterà
-con un laptime minore; come si può notare dalla tabella~\ref{tab:spa-velocity}, la velocità media della
-strategia mintime è decisamente inferiore rispetto alle altre due.
+Osservanod la tabella~\ref{tab:opt-spa}, per quanto riguarda la curvatura e la lunghezza del circuito, le
+strategie di mincurv e shortest path effettivamente producono rispettivamente il risultato minore tra le
+strategie. Pare inaspettato il risultato per il tempo minimo, che è il più alto tra tutte le strategie,
+questo tuttavia è giustificato dalla migliore modellazione della dinamica del veicolo da parte
+dell'algoritmo: in questo senso, sebbene mincurv e shortest path abbiano un lap time minore, questo è
+anche meno affidabile rispetto al mintime. Il lap time viene calcolato sommando il tempo di percorrenza
+tra un sample e il successivo assumendo che la velocità rimanga costante tra questi due: dunque un
+tracciato con una velocità media più alta risulterà con un lap time minore; come si può notare dalla
+tabella~\ref{tab:spa-velocity}, la velocità media della strategia mintime è decisamente inferiore
+rispetto alle altre due.
 
 A conferma della più completa modellazione di mintime sono state le simulazioni con MPC sul
 simulatore per le quali, a fronte del percorso di mincurv, il robot raggiungeva una velocità troppo
@@ -141,7 +142,7 @@ le altre due l'hanno tenuta per più tempo, mincurv tra tutte.
 	\caption{Profilo dell'accelerazione per Spa}
 	\label{fig:acc-graph-spa}
 \end{figure}
-Nell'accelerazione si notano le maggiori differenze: si nota come la strategia del percorso minimo sia
+Nell'accelerazione si osservano le maggiori differenze: si nota come la strategia del percorso minimo sia
 molto aggressiva nel cambio di accelerazione, infatti ha la deviazione standard maggiore tra tutte. 
 È da sottolineare che i valori di massimo e minimo sono spesso picchi che vengono mantenuti solo per
 qualche frazione di metro -- come mostrato in figura~\ref{fig:acc-graph-spa} -- e quindi poco
@@ -197,7 +198,7 @@ minor qualità rispetto a mintime.
 	\label{tab:opt-monza}
 	\begin{center}
 		\begin{tabular} {l|c|c|c}
-			                & Laptime [$s$]  & Curvatura mediana [$\nicefrac{rad}{m}$] & Lunghezza [$m$]\\
+			                & Lap time [$s$]  & Curvatura mediana [$\nicefrac{rad}{m}$] & Lunghezza [$m$]\\
 			\hline
 			mintime         & \textit{50.72} & -0.07           & 441.37         \\
 			mincurv         & 33.74          & \textit{-0.03 } & 439.57         \\
@@ -206,9 +207,9 @@ minor qualità rispetto a mintime.
 		\end{tabular}
 	\end{center}
 \end{table}
-Anche in questo caso valgono le stesse considerazioni descritte per il circuito di \href{sec:spa}{Spa} sopra
+Anche in questo caso valgono le stesse considerazioni descritte per il circuito di \hyperref[sec:spa]{Spa} sopra
 analizzato: gli algoritmi per mincurv e shortest path producono il risultato minore per le rispettive
-metriche, mentre sono poco affidabili per il laptime, di cui mintime offre un risultato più realistico per
+metriche, mentre sono poco affidabili per il lap time, di cui mintime offre un risultato più realistico per
 via della sua formulazione. Una nota da sottolineare è che l'algoritmo per mincurv è riuscito a
 minimizzare maggiormente la curvatura rispetto alla mappa precedente; in questo senso minimizzare si
 intende tendere a zero, dunque è necessario considerare i valori assoluti per la colonna della curvatura
@@ -250,7 +251,10 @@ conservativa rispetto alle altre, ma in questo caso ha la deviazione standard pi
 In questo caso, anche mintime ha raggiunto la velocità massima indicata, tuttavia l'ha raggiunta solo una
 volta e comunque per pochi metri, come è possibile alla figura \ref{fig:speed-graph-monza}; mentre,
 anche in questo caso, mincurv è al primo posto per aver mantenuto per più tempo la velocità massima,
-complice anche la topologia della mappa che offre maggiori possibilità grazie ai suoi rettilinei.
+complice anche la topologia della mappa che offre maggiori possibilità grazie ai suoi rettilinei:
+qualitativamente si nota alla figura~\ref{fig:monza-vel-comparison} come per micurv venga indicato il
+colore giallo anche sulla \textit{Curva Grande} ad indicare una velocità prossima a quella massima, come
+non avviene per le altre due strategie.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=\textwidth]{monza/vel-graph.png}
@@ -274,7 +278,7 @@ veramente applicabile dal robot reale o simulato. In ultima analisi, si tratta d
 questa esecuzione in particolare.
 
 Qualitativamente dalla figura \ref{fig:monza-acc-comparison}, anche in questo circuito si nota come
-mintime sia più graduale, soprattutto rispetto a shortest path, dove si può osservare molte volte
+mintime sia più graduale, soprattutto rispetto a shortest path, dove si può osservare più volte
 repentini sbalzi di accelerazione, che sono impraticabili per un veicolo.
 
 \begin{table}[H]
@@ -312,6 +316,7 @@ repentini sbalzi di accelerazione, che sono impraticabili per un veicolo.
 
 % ================== Tempo di Esecuzione ===============================
 \section{Tempo di Esecuzione} % NOTE: Tempo di Risoluzione
+\label{sec:exec-time}
 Un aspetto interessante che è stato analizzato è il tempo di esecuzione per ogni algoritmo. In generale
 si è sperimentato un tempo tra pochi secondi e alcuni minuti dal lancio del solutore fino
 all'esportazione in csv del risultato; tuttavia questo tempo racchiude anche controlli sul percorso

@@ -22,12 +22,15 @@ necessità dello studio.
 	\item generare la centerline e calcolare la larghezza del circuito;
 	\item applicare gli algoritmi di generazione della raceline;
 \end{enumerate}
-%TODO:spiegare occupancy grid?
 La mappa viene digitalizzata in file immagine che rappresenta una \textit{occupancy grid}, mentre i
 percorsi, che siano raceline o centerline, sono in formato csv con due colonne rappresentanti la
 posizione $(x,y)$ di ogni sample, nel caso sia una centerline, e una terza colonna per la velocità per
 quanto riguarda la raceline ed eventualmente ulteriori colonne per altri valori come l'accelerazione e
 l'angolo di sterzata.
+
+Una occupancy grid è una immagine in scala di grigi in cui, per ogni pixel, viene rappresentata la
+\textit{probabilità} che quel pixel sia uno spazio libero attraverso una percentuale di grigio. Dunque in
+occupancy grid binarie, il nero indica l'ostacolo certo, mentre il bianco lo spazio libero.
 \newpage
 Di seguito si indicano le specifiche della macchina usata durante questa tesi:
 \begin{itemize}
@@ -38,8 +41,8 @@ Di seguito si indicano le specifiche della macchina usata durante questa tesi:
 \end{itemize}
 
 \section{Generazione centerline}
-Affinché l'algoritmo per l'estrazione della linea di riferimento restituisca un risultato corretto, come
-detto in precedenza, l'immagine della mappa deve rappresentare un circuito chiuso e con bordi ben
+Affinché l'algoritmo per l'estrazione della linea di riferimento restituisca un risultato corretto
+l'immagine della mappa deve rappresentare un circuito chiuso e con bordi ben
 definiti e lisci, come effettivamente sarebbe un circuito di F1.
 Dunque se si acquisisce una mappa con SLAM come in figura \ref{fig:slam_map} è necessario modificarla come
 in figura \ref{fig:slam_map_mod}. Durante l'implementazione di questa tesi si è deciso di usare le mappe
@@ -53,7 +56,7 @@ dei circuiti da gara più famosi forniti da F1TENTH stesso \cite{f1tenth-gitmaps
 	\end{minipage}\hfill
 	\begin{minipage}[c]{0.47\textwidth}
 		\includegraphics[width=1\textwidth]{slam_map_mod.png}
-		\caption{Modifica dell'immagine \ref{fig:slam_map} per creare un circuito chiuso \cite{stevengong} }
+		\caption{Modifica dell'immagine~\ref{fig:slam_map} per creare un circuito chiuso \cite{stevengong} }
 		\label{fig:slam_map_mod}
 	\end{minipage}
 \end{figure}
@@ -66,7 +69,7 @@ Un esempio di applicazione di EDT si trova all'immagine \ref{fig:edt-ex}.
 
 Un aspetto da sottolineare è che le immagini fornite da F1TENTH rappresentano una occupancy grid
 ternaria, in cui il grigio corrisponde alle zone non esplorate; per sfruttare l'algoritmo sopra citato è
-necessario che i pixel grigi vengano convertiti in nero, perché  è il valore considerato come background
+necessario che i pixel grigi vengano convertiti in nero, perché è il valore considerato come background
 dall'algoritmo EDT. Prendendo come riferimento il circuito di Monza all'immagine \ref{fig:monza-binary}, il
 risultato dell'algoritmo si può vedere all'immagine \ref{fig:monza-edt}.
 
@@ -107,16 +110,16 @@ trasformano nel frame della mappa e esportano queste informazioni in un csv cont
 	\begin{center}
 		\includegraphics[width=0.6\textwidth, angle=90]{monza-skel.png}
 	\end{center}
-	\caption{Visualizzazione della centerline di Monza, il punto verde indica il punto di partenza}\label{fig:monza-skel}
+	\caption{Visualizzazione della centerline di Monza, il punto verde indica il punto di partenza}
+	\label{fig:monza-skel}
 \end{figure}
 
 \newpage
 
-%TODO: parlare di cosa produce (il csv)
 
 \section{Esecuzione dell'ottimizzazione}
 Ad alto livello, l'ottimizzazione cerca iterativamente di aggiustare la centerline in modo tale da
-ottenere il risultato migliore, come spiegato nel capitolo \ref{chap:opt} (pag. \pageref{chap:opt}).
+ottenere il risultato migliore, come spiegato nel capitolo~\ref{chap:opt} pag.~\pageref{chap:opt}.
 Questa fase non richiede solamente di eseguire il programma solutore, ma è necessario
 configurare i parametri che l'algoritmo usa. Questo compito si chiama \textit{tuning} dei parametri
 e consiste nel trovare quelli che meglio si adattano nel trovare la soluzione migliore.
@@ -129,7 +132,7 @@ tre stepsize diversi:
 		percorso con la spline;
 	\item \verb|stepsize_reg|: usato durante l'ottimizzazione per l'interpolazione della spline;
 	\item \verb|stepsize_interp_after_opt|: usato per campionare la spline dopo l'ottimizzazione, è la
-		distanza dei sample esportati nel csv risultante;
+		distanza dei sample esportati nel csv risultante.
 \end{itemize}
 Altri parametri fanno riferimento alla dinamica del veicolo, come angolo di sterzata massimo e velocità
 massima, e grandezze fisiche del veicolo, come massa, lunghezza e larghezza. Sono disponibili anche
@@ -148,8 +151,9 @@ veh_params = {
 	"g": 9.81            # [N/Kg]
 }
 \end{lstlisting}
+%TODO: parlare di cosa produce (il csv)
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=0.75\textwidth]{stepsize.png}
 	\end{center}
@@ -160,9 +164,10 @@ veh_params = {
 
 \subsection{Tuning dei parametri}
 \label{par:tuning}
-È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione porti un risultato
-più preciso a costo di aumentare il tempo di esecuzione. %, come dimostrato nel capitolo successivo. % TODO: fare riferimento all'analisi
-In figura \ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
+È facile immaginare che una minore distanza tra i sample durante l'ottimizzazione porti un risultato più
+preciso a costo di aumentare il tempo di esecuzione, come è emerso nel capitolo
+\href{sec:exec-time}{successivo} di analisi (pag.~\pageref{sec:exec-time}).
+In figura~\ref{fig:stepsize} si visualizza una comparazione tra raceline con stepsize diversi.
 
 Come ci si potrebbe aspettare, il parametro che controlla principalmente il tempo di esecuzione è lo
 stepsize durante l'ottimizzazione, ovvero \verb|stepsize_reg|, per questo è stato necessario scegliere un
@@ -172,14 +177,14 @@ questo limite non è stata trovata una soluzione viene ritornato un errore.
 
 In linea generale, si è riscontrato che:
 \begin{itemize}
-	\item \verb|stepsize_prep|, per quanto riguarda il percorso più breve e la curvatura minima, impatta
+	\item \verb|stepsize_prep|: per quanto riguarda il percorso più breve e la curvatura minima, impatta
 		sulla qualità del risultato, diversamente dal tempo minimo; non influisce significativamente sul
 		tempo di esecuzione. Valori in $[0.1, 0.5)$ per i primi due, $[0.5, 1]$ per mintime;
-	\item \verb|stepsize_reg|, come accennato precedentemente, incide sul tempo di esecuzione
+	\item \verb|stepsize_reg|: come accennato precedentemente, incide sul tempo di esecuzione
 		e in modo apprezzabile per mintime; è significativo per la qualità del percorso. Valori $ > 0.3$
 		per shortest path e mincurv, mentre per mintime sono necessari valori $> 1.0$ per evitare di
 		sforare le 2000 iterazioni;
-	\item \verb|stepsize_interp_after_opt| non incide in modo sostanziale sul tempo e per questo può
+	\item \verb|stepsize_interp_after_opt|: non incide in modo sostanziale sul tempo e per questo può
 		essere valorizzato in base alle necessità dell'algoritmo che userà il percorso.
 \end{itemize}
 A valori alti degli stepsize (es: $> 1.5$), può capitare che la raceline generata "tagli" il percorso per
@@ -203,7 +208,6 @@ lo smoothing factor. Quest'ultimo, se troppo basso e in concomitanza con valori 
 generare delle linee ortogonali che si incrociano tra loro e che quindi non possono produrre un percorso
 corretto. Un esempio di questo caso è visibile all'immagine \ref{fig:norm-cross}. Durante le
 sperimentazioni questo valore è stato fissato a 80.
-\newpage
 \noindent Di seguito si mostrano gli stepsize usati per generare il percorso a figura \ref{fig:taglio-spa}.
 \begin{lstlisting}
 stepsize_opts={

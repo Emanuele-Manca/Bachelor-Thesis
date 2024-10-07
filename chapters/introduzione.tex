@@ -24,49 +24,34 @@ La community è stata fondata all'Università della Pennsylvania nel 2016 ma ha 
 collaborazioni con altre istituzioni e università in tutto il mondo~--~in Italia, alla data di stesura, solo
 con l'Università degli Studi di Modena e Reggio Emilia. \cite{f1tenth-about}
 
-\paragraph{Moduli}
-Il percorso di apprendimento, che ha materiale per un semestre circa,
-% https://f1tenth.org/learn.html},
-raggruppa le lezioni in moduli e li integra con altrettanti laboratori guidati
-dove poter applicare le nozioni e algoritmi imparati.
+\paragraph{Studio preliminare}
+Al fine di comprendere al meglio gli argomenti della tesi, è stato effettuato uno studio preliminare su
+alcuni macro-argomenti che forniscono le basi fondamentali della guida autonoma e l'utilizzo della
+piattaforma di F1TENTH. 
 \newpage % da rivedere per non spaccare la lista in più pagine
-\noindent I moduli si raggruppano per tipologia di argomento trattato \cite{f1learn}:
+\noindent Di seguito si elencano le aree tematiche:
 \begin{itemize}
-	\item \textit{Modulo A} -- Introduzione a \hyperref[sec:ros]{ROS} e 
-		all'ambiente simulatore di \hyperref[par:gym]{F1TENTH~gym};
-	\item \textit{Modulo B} -- Metodi reattivi e dinamiche del veicolo: \\
-	      Descrive la modellazione delle dinamiche fisiche di un veicolo e presenta algoritmi di navigazione
-	      reattivi come \textit{PID Control} e \textit{Wall following};
-	\item \textit{Modulo C} -- Mapping \& Localization: SLAM e Particle Filter:\\
-	      Introduzione alla stima dello stato, filtro di Bayes e varianti come Particle filter, uso di
-	      algoritmi basati su filtri per la localizzazione del robot data una mappa, algoritmi localizzazione e
-	      di modellazione dell'ambiente come SLAM;
-	\item \textit{Modulo D} -- Planning \& Control: Pure Pursuit e RRT:\\
-	      Descrizione dello stack di pianificazione e controllo di un veicolo autonomo, algoritmo di
-	      \textit{path tracking} Pure Pursuit basato sulla dinamica del veicolo, introduzione ai
-	      \textit{local planner} e algoritmi come RRT, spline e clotoidi per descrivere un percorso,
-	      State lattice planner, Graph based planner;
-	\item \textit{Modulo E} -- Vision:\\
-	      Introduzione a Classical Perception, differenze hardware, stima della distanza, visual SLAM,
-	      percezione basata su ML, object detection;
-	\item \textit{Modulo F} -- Argomenti speciali: \textbf{\textit{Raceline Optimization}}, MPC:\\
-	      Ottimizzazione del percorso di gara, Model Predictive Control e Moral Decision Making;
-	\item \textit{Modulo G} -- Applicazione delle tecnologie descritte su gara simulata;
+	\item Sviluppo con \hyperref[sec:ros]{ROS} e l'ambiente simulatore di
+		\hyperref[par:gym]{F1TENTH~gym};
+	\item \textbf{Metodi reattivi e dinamiche del veicolo}:\\
+		Algoritmo \textit{\hyperref[par:pid]{PID Control}} ed esempio di applicazione in Wall
+		following, algoritmo reattivo \textit{Follow the Gap};
+	\item \textbf{Mapping \& Localization}:\\
+		Localizzazione e mapping simultaneo con \textit{\hyperref[par:slam]{SLAM}} e algoritmo di
+		localizzazione \textit{Particle Filter};
+	\item \textbf{Planning \& Control}:\\
+	      Stack di pianificazione e controllo di un veicolo autonomo, algoritmo di
+		  \textit{path tracking} \hyperref[par:pp]{Pure Pursuit}, introduzione ai
+	      \textit{local planner} e algoritmi come RRT.
 \end{itemize}
-
-\noindent Ai fini dell'obiettivo di questa tesi si è preferito non approfondire il Modulo E,
-in quanto si rendeva necessario l'uso fisico di hardware di cui non si aveva accesso,
-ovvero l'auto e soprattutto sensori di visione come telecamere e LiDAR.
 
 \paragraph{F1TENTH gym}
 \label{par:gym}
 % https://docs.google.com/presentation/d/1zfzzjVTbXNIZ75BFtGEwQBJRHlY95VKkFQjJhYfznpI/edit#slide=id.g1cca33b1c19_0_3213
-La community sviluppa e mantiene un simulatore open-source specifico per F1TENTH \cite{f1tenth-gym}
-in modo da poter sviluppare e testare comodamente
-senza l'uso di hardware specifico definito per la costruzione del robot.\\
-Il simulatore permette di definire la dinamica del veicolo in modo tale da avere una simulazione
-più reale possibile. 
-
+La community sviluppa e mantiene un simulatore open-source specifico per F1TENTH \cite{f1tenth-gym} in
+modo da poter sviluppare e testare comodamente senza l'uso di hardware specifico definito per la
+costruzione del robot.\\ Il simulatore permette di definire la dinamica del veicolo in modo tale da avere
+una simulazione più reale possibile.
 
 % ================== Autonomous Driving Pipeline =======================
 \section{Autonomous Driving Pipeline}
@@ -148,7 +133,6 @@ di un ambiente sconosciuto. Siccome i problemi di mapping e localization necessi
 per per poter essere risolti, è necessario risolverli contemporaneamente se non si hanno dati
 nè sull'ambiente nè sulla posizione del robot.\\
 Ad alto livello, l'algoritmo segue questi passaggi:
-% NOTE: da rivedere/rimuovere nel caso
 \begin{enumerate}
 	\item \textit{prima scansione}: si usa la prima scansione come mappa iniziale;
 	\item \textit{cambio della posizione}: il robot si muove di una certa quantità in un piccolo
@@ -182,6 +166,7 @@ l'errore tra il comando calcolato e l'effettivo risultato dell'applicazione di q
 attuatori, così da poterlo compensare al prossimo comando inviato.
 
 \paragraph{PID Controller} \cite{lection04, pid-wiki}
+\label{par:pid}
 L'algoritmo più conosciuto, specialmente per la sua semplicità, è il \textit{PID Controller} che viene
 usato ampiamente in tutta l'industria dell'ingegneria del controllo, non solo in questo contesto.\\
 PID è un acronimo che sta per \textbf{P}roportional-\textbf{I}ntegral-\textbf{D}erivative e questo
@@ -196,6 +181,7 @@ dell'errore sia dalla sua durata nel tempo, ovvero si correggono gli errori accu
 avrebbero dovuto essere corretti prima.
 
 \paragraph{Pure Pursuit} \cite{lection10}
+\label{par:pp}
 Un'altro algoritmo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
 problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un \textit{tracciato},
 che il robot deve seguire. L'algoritmo tiene conto della dinamica del veicolo, che in questo caso è

@@ -3,25 +3,25 @@
 \chapter{Raceline Optimization}
 \label{chap:opt}
 
-Lo studio di questa tesi si è concentrato a trovare una soluzione al seguente problema:\ \textit{trovare
-la raceline globale ottima \emph{\footnotesize -- secondo un criterio scelto --} data una mappa}. Il
+Lo studio di questa tesi si è concentrato a trovare una soluzione al seguente problema: \textit{data una
+mappa, trovare la sua raceline globale ottima, secondo un criterio scelto}. Il
 criterio di ottimizzazione principale, in questi casi, è il tempo di percorrenza del tracciato, ovvero il
-\textit{laptime}.
+\textit{lap time}.
 
-% NOTE: da rivedere?
-Le porzioni interessanti di un circuito da gara sono le curve: ne esistono di diversi tipi e altrettanti
-modi per affrontarle in base al tipo; trovare una percorso ottimo, in questo senso, è un compito complesso e
-il percorso più breve non implica quello col minor tempo per via, appunto, delle curve, che riducono la
-velocità media. Dunque una strategia migliore è quella di trovare la traiettoria con le curvature minori,
-così da mantenere una velocità più alta nell'affrontarle. Anche questo approccio, tuttavia, non prende in
-considerazione una sequenza di curve e la velocità di uscita da una curva. Il percorso ottimo in termini
-di tempo, quindi, è un compromesso tra queste due strategie, ovvero quello che minimizza la distanza
-percorsa mantenendo alta la velocità nelle curve ed eventualmente anche in uscita da esse.
+Le porzioni interessanti di un circuito da gara sono le \textit{curve}: ne esistono di diversi tipi e
+altrettanti modi per affrontarle in base al tipo; trovare una percorso ottimo, in questo senso, è un
+compito complesso e il percorso più breve non coincide necessariamente con quello che richiede meno
+tempo, a causa delle curve che riducono la velocità media. Una possibile strategia per mantenere alta la
+velocità in curva è quella di percorrere la traiettoria con la curvatura minore. Questo approccio,
+tuttavia, non prende in considerazione una sequenza di curve e la velocità di uscita da una curva. Il
+percorso ottimo in termini di tempo, quindi, è un compromesso tra queste due strategie, ovvero quella che
+minimizza la distanza percorsa mantenendo alta la velocità nelle curve ed eventualmente anche in uscita
+da esse.
 
-É bene precisare che la traiettoria generata è ottima \textbf{solo} nel contesto considerato, ovvero
-quello di un singolo robot sul tracciato, senza alcun rivale. È da considerare un'operazione preliminare
-alla gara, perché si ha necessità di conoscere la mappa.
-Tuttavia non è utile solo nel contesto considerato: la raceline ottima, avendo una visione globale sulla
+Trovare la raceline ottima è generalmente un'operazione preliminare alla gara, dunque \textit{non può
+considerare} eventuali avversari o ostacoli dinamici; per questo motivo viene calcolata nell'assunzione
+di un \textit{singolo robot} sul tracciato.
+Tuttavia non è utile solo nel contesto considerato: la raceline globale, avendo una visione intera sulla
 mappa, può essere sfruttata da un local o behavioural planner come linea guida.
 
 % ================== Le Curve ==========================================
@@ -29,20 +29,19 @@ mappa, può essere sfruttata da un local o behavioural planner come linea guida.
 Le principali complessità di un circuito di cui l'ottimizzazione si occupa è come affrontare le curve.\\
 Caratteristica principale di una curva è il suo \textit{raggio}: un raggio maggiore corrisponde a
 velocità più alte e viceversa; inoltre, si distinguono il raggio esterno e quello interno e la loro
-differenza risulta nell'ampiezza della curva.
+differenza risulta nell'ampiezza del circuito in quel punto.
 Esistono anche caratteristiche di natura tridimensionale, come la variazione dell'altezza e
 l'inclinazione, tuttavia non sono state oggetto di studio in questa tesi dal fatto che il contesto di
-F1TENTH non include questa variabilità, come accade nelle gare di F1.
+F1TENTH non include questa variabilità, come invece accade nelle gare di F1.
 
 In linea generale, una curva può essere suddivisa in \textit{quattro sequenze} principali, come mostrato
 in figura \ref{fig:geom-raceline}:
 \begin{enumerate}
-	\item Approccio e decelerazione
-	\item Inizio della curva
-	\item Raggiunta dell'apice
-	\item Uscita della curva e accelerazione
+	\item approccio e decelerazione;
+	\item inizio della curva;
+	\item raggiunta dell'apice;
+	\item uscita della curva e accelerazione.
 \end{enumerate}
-
 Anche la traiettoria, dato che segue una curva, può essere definita con un raggio che può essere
 \textit{costante} o \textit{variabile} dall'inizio della curva fino alla fine.
 
@@ -59,16 +58,16 @@ L'approccio più semplice e immediato per affrontare una curva genera una raceli
 nome di \textit{raceline geometrica}. La strategia prevede queste sequenze, rappresentate in figura
 \ref{fig:geom-raceline}:
 \begin{enumerate}
-	\item Approccio largo e verso l'esterno del circuito
-	\item Sterzata verso il centro del raggio interno della curva
-	\item Uscita larga e verso l'esterno del circuito
+	\item approccio largo e verso l'esterno del circuito;
+	\item sterzata verso il centro del raggio interno della curva;
+	\item uscita larga e verso l'esterno del circuito.
 \end{enumerate}
 Si tratta, quindi, di una raceline a raggio \textit{costante}.\\
 I principali vantaggi di questo approccio rispetto alla raceline ottima sono la sua semplicità, sia in
-termini di esecuzione sia in termini di computazione, e la possibilità di mantenere un'alta velocità
+termini di modellazione sia in termini di computazione, e la possibilità di mantenere un'alta velocità
 durante la curva. Tuttavia, la raceline geometrica ha importanti svantaggi quali una decelerazione
-prematura all'entrata della curva, una accelerazione ritardata all'uscita e la possibilità di essere in
-uno stato svantaggiato per affrontare la prossima curva, nel caso di curve in sequenza.
+prematura all'entrata della curva, una accelerazione ritardata all'uscita e la possibilità di ritrovarsi
+in uno stato svantaggiato per affrontare la prossima curva, nel caso di curve in sequenza.
 
 Dunque, la raceline ottimale non dovrebbe tener conto solamente della singola curva ma eventualmente
 anche di quelle successive: per estensione, quindi, deve essere considerato tutto il circuito.
@@ -76,8 +75,8 @@ anche di quelle successive: per estensione, quindi, deve essere considerato tutt
 \paragraph{Raceline ottimale}
 Al contrario della raceline geometrica, non è possibile definire a priori le sequenze da seguire come
 fatto in precedenza, proprio perché dipende dalle caratteristiche della curva.
-Riprendendo come esempio la curva in figura \ref{fig:geom-raceline}, la raceline ottimale, ovvero quella
-che riesce ad eseguire la curva nel minor tempo possibile, tarda il più possibile l'inizio della curva
+Riprendendo come esempio la curva in figura \ref{fig:geom-raceline}, la raceline ottimale -- ovvero quella
+che riesce ad eseguire la curva nel minor tempo possibile -- tarda il più possibile l'inizio della curva
 per mantenere più velocità all'entrata, decelera più velocemente e ha una virata più stretta e con un
 apice più distante da quello geometrico, così facendo si ha la possibilità di aver più tempo per
 accelerare di nuovo all'uscita della curva con la possibilità di mantenere una traiettoria più centrata
@@ -116,9 +115,9 @@ processo di generazione del percorso ottimo secondo un certo criterio.
 \noindent In questa tesi sono state analizzate tre strategie differenti:
 \begin{itemize}
 	\setlength\itemsep{0em}
-	\item Percorso più breve  -- \textit{shortest path}
-	\item Curvatura minima -- \textit{minimum curvature}
-	\item Tempo minimo -- \textit{minimum time}
+	\item Percorso più breve  -- \textit{shortest path};
+	\item Curvatura minima -- \textit{minimum curvature};
+	\item Tempo minimo -- \textit{minimum time}.
 \end{itemize}
 
 \noindent Il problema in questione è un problema di ricerca su due variabili: il percorso effettivo sulla mappa e
@@ -146,15 +145,13 @@ tempo più breve è descritto in \textit{"Minimum-time speed optimization over a
 \cite{lipp2014minimum}.
 
 Per quanto riguarda la terza strategia, i due sotto-problemi devono essere risolti contemporaneamente
-usando algoritmi di controllo ottimale, questi hanno la possibilità di includere ulteriori vincoli come
-per esempio limitazioni al consumo di energia e considerare l'attrito delle ruote per diversi terreni e
+usando algoritmi di controllo ottimale, questi hanno la possibilità di includere ulteriori vincoli, come
+per esempio limitazioni al consumo di energia o considerare l'attrito delle ruote per diversi terreni e
 condizioni meteo.\cite{christ2021time} Sono algoritmi con modelli dinamici dell'auto più completi e
 fedeli alla realtà che raccolgono nel problema diverse variabili, per questo sono più complessi e
 richiedono più sforzo computazionale, ma hanno il vantaggio di essere più realistici nel risultati
 rispetto alle loro controparti modellate in problemi di programmazione quadratica.
 
-% \label{sub:formal-def}
-% section a parte?
 \paragraph{Definizione di spline \cite{olausson2021optimal} \cite{globalplanning-lec}}
 \label{par:spline-def}
 Un percorso, per poter essere computato da una macchina, deve necessariamente essere discretizzato in
@@ -164,19 +161,20 @@ Tuttavia è necessaria una descrizione matematica del tracciato: questa viene fo
 il cui scopo, in questo contesto, è quello di interpolare dei punti, ovvero i samples, in modo tale che
 la funzione sia continua fino ad un dato ordine.
 
-Per rappresentare un percorso, che deve essere seguito da un'auto, sono necessari alcuni vincoli, ovvero:
+Una spline, per poter rappresentare un percorso che deve essere seguito da un'auto, è necessario che
+rispetti alcuni vincoli, ovvero:
 \begin{enumerate}
 	\item L'inizio di un polinomio deve essere un punto di discretizzazione, un sample;
-	\item La fine dello stesso deve essere il sample successivo all'inizio;
+	\item La fine di un polinomio deve essere il sample successivo all'inizio;
 	\item L'orientamento alla fine di una funzione deve essere uguale all'orientamento della funzione
 	      successiva;
 	\item La curvatura alla fine di una funzione deve essere uguale alla curvatura della funzione
 	      successiva;
 \end{enumerate}
 I primi due vincoli sono garantiti dal fatto che la spline interpola i sample, per gli ultime due è
-necessario calcolare la derivata prima e seconda in quel punto. I polinomi di grado tre offrono, quindi,
-una buona rappresentazione del percorso perché garantiscono la calcolabilità delle derivate prime e
-seconde per ogni punto del dominio.
+necessario calcolare la derivata prima e seconda del polinomio in quei punti. I polinomi di grado tre
+offrono, quindi, una buona rappresentazione del percorso perché garantiscono la calcolabilità delle
+derivate prime e seconde per ogni punto del dominio.
 
 Il dominio di ogni polinomio viene normalizzato per la distanza tra il punto di partenza e quello di fine
 dal parametro $t$, dove $t = 0$ indica il punto di inizio e $t = 1$ il punto di fine.
@@ -190,7 +188,6 @@ l'immagine \ref{fig:spline} mostra graficamente una spline e i vincoli associati
 	\caption{Esempio di spline formata da due polinomi e vincoli associati \cite{lection22}}
 	\label{fig:spline}
 \end{figure}
-
 Il calcolo dei valori delle $x$ e delle $y$ avviene separatamente ma usando gli stessi metodi, di
 seguito, quindi, verranno descritti solo la formulazione per $x$.
 Matematicamente i vincoli sopra descritti vengono formulati come:
@@ -207,18 +204,18 @@ $f'_i(1) - f'_{i+1}(0)$ e $f''_i(1) - f''_{i+1}(0)$
 
 \paragraph{Definizione di centerline}
 \label{par:centerline}
-La centerline o reference line è il percorso sul circuito preso in considerazione che è equidistante dai
-bordi dello stesso. Viene discretizzata in punti di egual distanza tra loro e si registrano le distanze
-ai bordi destro e sinistro così da formare una line immaginaria, ortogonale alla reference line, che unisce
-i due punti. L'immagine \ref{fig:centerline-ex} ne mostra un esempio grafico.
+La centerline, o reference line, è il percorso che è equidistante dai bordi del circuito. Viene
+discretizzato in punti di egual distanza tra loro e si registrano le distanze ai bordi destro e sinistro,
+così da formare una line immaginaria, ortogonale alla reference line, che unisce i due punti. L'immagine
+\ref{fig:centerline-ex} ne mostra un esempio grafico.
 
 La linea centrale di riferimento è necessaria agli algoritmi di ottimizzazione come punto di partenza per
 trovare la soluzione ottima.
-La distanza dei samples è un parametro dell'algoritmo e deve essere decisa in base al caso d'uso.
+La distanza dei samples è un parametro dell'algoritmo e deve essere decisa in base al caso d'uso, come
+approfondito al paragrafo \ref{par:tuning}.
 
 \begin{figure}[h]
 	\begin{center}
-		%TODO: da cambiare? troppo sgranato?
 		\includegraphics[width=0.65\textwidth]{centerline-ex.png}
 	\end{center}
 	\caption{La figura mostra la rappresentazione discreta della centerline (i punti verdi) e le linee
@@ -229,8 +226,8 @@ La distanza dei samples è un parametro dell'algoritmo e deve essere decisa in b
 
 \paragraph{Definizione di raceline}
 \label{par:raceline}
-I samples della raceline vengono calcolati a partire da quelli delle centerline muovendoli sulla linea
-che unisce i due tracciati. Formalmente:
+I samples della raceline vengono calcolati a partire da quelli delle centerline "muovendoli" sulla linea
+immaginaria che unisce i due bordi. Formalmente:
 \[
 	\overrightarrow{r_i} = \overrightarrow{p_i} + \alpha_i \overrightarrow{n_i}
 \]
@@ -283,7 +280,7 @@ samples. Un sample della raceline viene formulato come:
 		y_{r,i} + a_i\Delta_{y,i}
 	\end{bmatrix}
 \]
-ovvero, il punto più a destra del segmento $i$esimo ortogonale alla centerline spostato sullo stesso per
+ovvero, il punto più a destra del segmento $i$-esimo ortogonale alla centerline spostato sullo stesso per
 un fattore $a$. Nella figura \ref{fig:short-path-expl} ne viene mostrato un esempio.\\
 La distanza tra un sample e il suo successivo può essere descritta, quindi, come:
 \[
@@ -332,7 +329,7 @@ che elevata al quadrato:
 \label{sec:velocity-plan}
 Come citato precedentemente, il calcolo della velocità per ogni sample può essere calcolato con
 l'algoritmo \textit{forward-backward}, che ha il vantaggio di essere semplice, veloce e sufficientemente
-accurato. %TODO: parlare di altri algoritmi
+accurato.
 
 L'algoritmo assume che il robot venga guidato ai suoi limiti fisici per ogni punto del percorso, quindi
 si ha che l'accelerazione longitudinale dipende dai limiti del motore e dall'azione frenante dei freni,
@@ -343,11 +340,11 @@ Ad alto livello, l'algoritmo si può riassumere in:
 	\item Si genera una prima stima della velocità basandosi sulla massima accelerazione laterale per la
 	      curvatura di ogni sample;
 	\item Si riducono le stime alla velocità massima consentita per quei sample che la superano;
-	\item \textbf{Forward}: si cicla sui samples e, se non si sono superati i limiti fisici del robot, si
+	\item \textbf{Forward}: si itera sui samples e, se non si sono superati i limiti fisici del robot, si
 		applica una possibile accelerazione longitudinale, altrimenti
-	\item \textbf{Backward}: si cicla sui samples e si applica una possibile decelerazione longitudinale
+	\item \textbf{Backward}: si itera sui samples e si applica una possibile decelerazione longitudinale.
 \end{enumerate}
-in particolare per gli ultimi due punti la velocità al punto successivo viene calcolata come segue:
+In particolare per gli ultimi due punti la velocità al punto successivo viene calcolata come segue:
 \begin{enumerate}
 
 	\item \raggedright Si calcola l'accelerazione laterale data la curvatura per quel sample:\\
