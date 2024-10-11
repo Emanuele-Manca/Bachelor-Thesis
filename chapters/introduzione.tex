@@ -9,7 +9,7 @@
 \section{F1TENTH}
 F1TENTH è una community internazionale di ricercatori, ingegneri e appassionati di sistemi autonomi
 che organizza competizioni di corsa di veicoli-robot con la peculiare caratteristica
-di essere \textit{un decimo} di quelle di F1, da cui il nome.
+di essere grandi un \textit{un decimo} di quelle di F1, da cui il nome.
 \begin{wrapfigure}{r}{0.3\textwidth}
 	\centering
 	\includegraphics[width=0.2\textwidth]{f1tenth-car.png}
@@ -28,7 +28,7 @@ con l'Università degli Studi di Modena e Reggio Emilia. \cite{f1tenth-about}
 Al fine di comprendere al meglio gli argomenti della tesi, è stato effettuato uno studio preliminare su
 alcuni macro-argomenti che forniscono le basi fondamentali della guida autonoma e l'utilizzo della
 piattaforma di F1TENTH. 
-\newpage % da rivedere per non spaccare la lista in più pagine
+% \newpage % da rivedere per non spaccare la lista in più pagine
 \noindent Di seguito si elencano le aree tematiche:
 \begin{itemize}
 	\item Sviluppo con \hyperref[sec:ros]{ROS} e l'ambiente simulatore di
@@ -62,8 +62,8 @@ Un progetto complesso come quello dei veicoli autonomi deve essere suddiviso in 
 più specifici e in modo tale che uniti insieme risultino nella soluzione del problema.
 
 \bigskip
-\noindent Il \emph{software} per i veicoli autonomi segue un \textit{ciclo} di operazioni
-in cui il prodotto di una fase è input della successiva; si identificano in ordine tre fasi:
+\noindent Il sistema di controllo \emph{software} dei veicoli autonomi segue un \textit{ciclo} di
+operazioni in cui il prodotto di una fase è input della successiva; si identificano in ordine tre fasi:
 \begin{enumerate}
 \item \textbf{Perception} -- Attraverso sensori ottici e radar si \emph{percepisce} il mondo attorno a sè,
 	  ci si localizza nella mappa e si identificano eventuali ostacoli o rivali;
@@ -112,19 +112,20 @@ maggiormente su una soluzione che richieda solo l'uso di sensori ottici, laser e
 \cite{betz2022autonomous} Per effettuare la localizzazione del robot è necessario avere un modello della
 mappa.
 
-Una prima soluzione potrebbe essere quella di partire da una posizione nota e di calcolare la posizione
-successiva integrando le misurazioni dei vari sensori e l'odometria delle ruote: questa tecnica viene
-chiamata \textit{Dead Reckoning} e, sebbene possa funzionare correttamente in un simulatore, nella realtà
-le misurazioni dei sensori contengono del rumore e l'odometria delle ruote generalmente non ha la
-precisione richiesta per via di un possibile slittamento delle ruote stesse: tutto ciò, quindi, introduce
-nei calcoli degli \textit{errori} che si accumulano col tempo, portando a risultati errati.
+Una tecnica spesso usata in questi ambiti è l'odometria, che permette di stimare la variazione della
+posizione del robot, del suo orientamento o della velocità da sensori che misurano lo spazio percorso
+delle ruote e dell'angolo di sterzata. Dunque, una prima soluzione potrebbe essere quella di partire da
+una posizione nota e di calcolare la posizione successiva integrando le misurazioni dei vari sensori e
+l'odometria delle ruote: questa tecnica viene chiamata \textit{Dead Reckoning} e, sebbene possa
+funzionare correttamente in un simulatore, nella realtà le misurazioni dei sensori contengono del rumore
+e l'odometria delle ruote generalmente non ha la precisione richiesta per via di un possibile slittamento
+delle ruote stesse: tutto ciò, quindi, introduce nei calcoli degli \textit{errori} che si accumulano col
+tempo, portando a risultati errati.
 
 La soluzione è quella di rendere più robusti i calcoli tenendo conto del rumore dell'odometria e dei
 sensori e compensare alla mancanza di informazioni riguardo la posizione iniziale. Gli algoritmi
 modellano questo aspetto usando il \textit{calcolo delle probabilità}. I principali sono: il già citato
-Particle Filter, noto anche come AMCL (Adaptive Monte Carlo Localization) e principale algoritmo di
-localization usato nello studio di questa tesi e nei laboratori, filtro di Bayes e derivati come Kalman
-filter.
+Particle Filter, filtro di Bayes e derivati come Kalman filter.
 
 \paragraph{SLAM}
 \label{par:slam}
@@ -140,7 +141,8 @@ Ad alto livello, l'algoritmo segue questi passaggi:
 	\item \textit{stima della posizione}: la nuova scansione viene correlata con la mappa per
 	      stimare il cambiamento di posizione;
 	\item \textit{aggiornamento della mappa}: si integra la nuova scansione nella costruzione della mappa
-	      sovrapponendo le misurazioni.
+	      sovrapponendo le misurazioni. Successivamente il metodo riparte dal punto 2 fino a
+		  completamento della mappa.
 \end{enumerate}
 
 \subsection{Planning}
@@ -165,10 +167,11 @@ veicolo rispetto agli output di controllo generati precedentemente; in questo mo
 l'errore tra il comando calcolato e l'effettivo risultato dell'applicazione di quel comando dagli
 attuatori, così da poterlo compensare al prossimo comando inviato.
 
-\paragraph{PID Controller} \cite{lection04, pid-wiki}
+\paragraph{PID Controller} 
 \label{par:pid}
-L'algoritmo più conosciuto, specialmente per la sua semplicità, è il \textit{PID Controller} che viene
-usato ampiamente in tutta l'industria dell'ingegneria del controllo, non solo in questo contesto.\\
+L'algoritmo più conosciuto, specialmente per la sua semplicità, è il \textit{PID Controller}
+\cite{lection04, pid-wiki} che viene usato ampiamente in tutta l'industria dell'ingegneria del controllo,
+non solo in questo contesto.\\ 
 PID è un acronimo che sta per \textbf{P}roportional-\textbf{I}ntegral-\textbf{D}erivative e questo
 suggerisce che l'ouput è calcolato secondo tre parametri. Si tratta di un algoritmo closed-loop.
 
@@ -179,10 +182,10 @@ una correzione all'ouput che è proporzionale alla velocità con cui l’errore 
 Infine, con \textbf{integrale} si applica un'ulteriore correzione calcolata sia dalla magnitudine
 dell'errore sia dalla sua durata nel tempo, ovvero si correggono gli errori accumulati nel tempo che
 avrebbero dovuto essere corretti prima.
-
-\paragraph{Pure Pursuit} \cite{lection10}
+\newpage
+\paragraph{Pure Pursuit} 
 \label{par:pp}
-Un'altro algoritmo closed-loop più specifico per le corse di robot è Pure Pursuit. In questo caso, il
+Un'altro algoritmo closed-loop più specifico per le corse di robot è Pure Pursuit.\cite{lection10} In questo caso, il
 problema richiedere una sequenza di waypoint, ovvero punti nella mappa che formano un \textit{tracciato},
 che il robot deve seguire. L'algoritmo tiene conto della dinamica del veicolo, che in questo caso è
 \textit{non-holonomic}, quindi calcola l'arco che congiunge il robot e il primo waypoint che si trova ad
@@ -200,12 +203,13 @@ modifica migliorativa.
 % https://www.ros.org/blog/getting-started/#
 % https://index.ros.org/packages/
 % http://design.ros2.org/articles/changes.html ros1 vs ros2
-ROS è un acronimo che sta per \textbf{R}obot \textbf{O}perating \textbf{S}ystem e,
-sebbene il nome possa trarre in inganno, non è un sistema operativo nel senso tradizionale,
-bensì si presenta come un mediatore -- un \textbf{middleware} -- tra l'applicazione robot
-e l'hardware del robot, ma non sostituisce il sistema operativo sottostante. \cite{ros-ecosystem}\cite{scirobotics}
+Il lavoro di tesi e l'infrastruttura di F1TENTH sono basati su ROS, un acronimo che sta per
+\textbf{R}obot \textbf{O}perating \textbf{S}ystem e, sebbene il nome possa trarre in inganno, non è un
+sistema operativo nel senso tradizionale, bensì si presenta come un mediatore -- un \textbf{middleware}
+-- tra l'applicazione robot e l'hardware del robot, ma non sostituisce il sistema operativo sottostante.
+\cite{ros-ecosystem, scirobotics}
 
-Viene usato da tutta l'industria della robotica per via della sua alta modularità:
+Viene usato dalla comunità robotica per via della sua alta modularità:
 dalla ricerca all'insegnamento, da progetti di un gruppo di persone a progetti più importanti
 di grosse aziende. ROS fornisce i \textit{building blocks} da usare così da facilitare e velocizzare
 la realizzazione dell'applicativo e fornisce un metodo di comunicazione efficiente tra le varie componenti.
@@ -218,12 +222,9 @@ presenta più simile a un \textit{SDK} (Software Development Kit) accompagnato d
 principalmente a linea di comando.
 
 ROS viene rilasciato con la stessa filosofia delle \textit{distro linux}, con più distribuzioni mantenute
-nello stesso tempo. Va notato che le differenze tra ROS e ROS2 sono profonde differenze
-di design e aggiornamento delle tecnologie come, per esempio, l'aggiornamento dei linguaggi supportati,
-il sistema di build e importanti modifiche alla gestione dei \hyperref[ros:msgs]{messaggi} e servizi. \cite{ros-diff}
-Attualmente, ROS e ROS2 supportano due linguaggi: C++ e Python. In questa tesi è stato usato Python.
-Durante lo studio di questa tesi è stato usato ROS2, distribuzione
-\href{https://docs.ros.org/en/humble/}{\textit{"Humble"}}, per necessità di compatibilità con alcuni
+nello stesso tempo. ROS e ROS2 \cite{ros-diff} supportano due linguaggi: C++ e Python. In questa tesi è stato usato
+Python. Durante lo studio di questa tesi è stato usato ROS2, distribuzione
+\href{https://docs.ros.org/en/humble/}{\textit{``Humble''}}, per necessità di compatibilità con alcuni
 pacchetti.
 
 \bigskip
@@ -246,10 +247,10 @@ nodi.
 \label{ros:nodes}
 % https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html
 % https://docs.ros.org/en/iron/Concepts/Basic/About-Nodes.html
-I nodi, \textit{Nodes} in inglese, sono l'unità computazionale che partecipa al ROS Graph;
-idealmente, un nodo dovrebbe essere responsabile di un solo compito, logicamente separato
-da altri altri, per esempio controllare le ruote, processare i dati grezzi derivati dalle misurazioni
-dei laser o implementare un algoritmo come Pure Pursuit.
+I nodi, \textit{Nodes} in inglese, sono l'unità computazionale che partecipa al ROS Graph; idealmente, un
+nodo dovrebbe essere responsabile di un solo compito, logicamente separato da altri altri, per esempio
+controllare le ruote, processare i dati grezzi derivati dalle misurazioni dei laser o implementare un
+algoritmo come Pure Pursuit.
 Un completo sistema robotico comprende, quindi, un insieme di nodi che lavorano congiuntamente, spesso
 contenuti nello stesso eseguibile.\\
 
@@ -321,12 +322,16 @@ RViz (\textbf{R}os \textbf{Vi}suali\textbf{z}er) è il principale strumento di v
 applicativi ROS. Durante lo studio di questa tesi è stato usato per visualizzare la simulazione di
 F1TENTH gym, il modello del robot, la mappa del circuito ed eventuali visualizzazioni dei vari algoritmi
 in studio, per esempio i waypoint di goal per Pure Pursuit, l'albero dei punti random generati da RRT e i
-waypoint che compongono la raceline ottima.\\
-La figura \ref{fig:rviz-example} ne mostra un'esempio.
+waypoint che compongono la raceline ottima. La figura \ref{fig:rviz-example} ne mostra un'esempio.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.4\textwidth, height=0.45\textheight, angle=90]{rrt.png}
-	\caption{Esempio di caso d'uso di RViz per visualizzare l'algoritmo RRT}
+	\caption{Esempio di caso d'uso di Rviz per visualizzare l'algoritmo di local planning RRT e
+	l'algoritmo di controllo Pure Pursuit; in rosso gli ostacoli rilevati dal sensore ottico, in verde
+	chiaro i waypoint che compongono il percorso globale da seguire, l'albero di RRT è visualizzato con
+	archi blu e nodi magenta, il punto verde è il waypoint di Pure Pursuit ad una certa distanza $L$ e il
+	punto rosso il goal waypoint di PurePursuit, in giallo il percorso sull'albero seguito per ricercare
+	il punto verde.}
 	\label{fig:rviz-example}
 \end{figure}

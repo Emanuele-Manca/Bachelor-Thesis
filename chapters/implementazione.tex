@@ -7,12 +7,13 @@ In questo capitolo verranno descritti i passaggi implementati per generare la ra
 mappa.
 
 Nel corso dello studio di questa tesi, è stato integrato un fork
-\footnote{https://github.com/CL2-UWaterloo/Raceline-Optimization} della repository ufficiale del paper
-citato \cite{christ2021time}, utilizzandolo come base di partenza. Si è condotta un'analisi del codice
-sorgente, identificando le parti rilevanti per lo scopo e apportando delle modifiche e
-personalizzazioni per adattarlo al contesto. Questo ha permesso di ottimizzare le funzionalità
-esistenti e di implementare ulteriori miglioramenti, garantendo così che il codice rispondesse alle
-necessità dello studio.
+\footnote{https://github.com/CL2-UWaterloo/Raceline-Optimization} della repository di
+\cite{christ2021time}, utilizzandolo come base di partenza. In questa repository sono implementati gli
+algoritmi analizzati al capitolo \ref{chap:opt} (pag.~\pageref{chap:opt}); quindi si è condotta
+un'analisi del codice sorgente, identificando le parti rilevanti per lo scopo e apportando delle
+modifiche e personalizzazioni per adattarlo al contesto, come per esempio selezionare i tipi di output da
+produrre. Questo ha permesso di ottimizzare le funzionalità esistenti e di implementare ulteriori
+miglioramenti, garantendo così che il codice rispondesse alle necessità dello studio.
 
 \bigskip
 \noindent I passaggi ad alto livello sono i seguenti:
@@ -34,7 +35,7 @@ occupancy grid binarie, il nero indica l'ostacolo certo, mentre il bianco lo spa
 \newpage
 Di seguito si indicano le specifiche della macchina usata durante questa tesi:
 \begin{itemize}
-	\item[-] \textit{OS}: Ubuntu 22.04.4 LTS (Jammy Jellyfish)
+	\item[-] \textit{OS}: Ubuntu 22.04.4 LTS Jammy Jellyfish (kernel 6.8.0-45-generic)
 	\item[-] \textit{Kernel}: 6.8.0-40 generic x86\_64
 	\item[-] \textit{CPU}: Intel Core i7-6700k quad core
 	\item[-] \textit{RAM}: 16GB
@@ -67,12 +68,12 @@ dell'immagine dal background: in questo caso, lo sfondo preso in considerazione 
 esplorati, ovvero quelli esterni ai bordi del circuito.
 Un esempio di applicazione di EDT si trova all'immagine \ref{fig:edt-ex}.
 
+\newgeometry{bottom=1cm}
 Un aspetto da sottolineare è che le immagini fornite da F1TENTH rappresentano una occupancy grid
 ternaria, in cui il grigio corrisponde alle zone non esplorate; per sfruttare l'algoritmo sopra citato è
 necessario che i pixel grigi vengano convertiti in nero, perché è il valore considerato come background
 dall'algoritmo EDT. Prendendo come riferimento il circuito di Monza all'immagine \ref{fig:monza-binary}, il
 risultato dell'algoritmo si può vedere all'immagine \ref{fig:monza-edt}.
-
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=1\textwidth]{edt-ex.png}
@@ -93,6 +94,7 @@ risultato dell'algoritmo si può vedere all'immagine \ref{fig:monza-edt}.
 		\label{fig:monza-edt}
 	\end{minipage}
 \end{figure}
+\restoregeometry
 
 Il passo successivo è quello di ottenere solo la parte centrale, ovvero quella con i valori di bianco
 più alti e ridurla a un singolo pixel. In Python, questa operazione, viene eseguita dalla funzione
@@ -106,7 +108,7 @@ esplorato: seguendo questo processo si ottengono le posizioni dei pixel e la lor
 trasformano nel frame della mappa e esportano queste informazioni in un csv contenente le colonne
 \verb|x, y, width_left, width_right|.
 \vfill
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=0.6\textwidth, angle=90]{monza-skel.png}
 	\end{center}
@@ -151,11 +153,34 @@ veh_params = {
 	"g": 9.81            # [N/Kg]
 }
 \end{lstlisting}
-%TODO: parlare di cosa produce (il csv)
+\newpage
+\noindent Il risultato di questa fase è un file csv contenenti i samples della raceline generata. Di seguito si
+mostra un esempio \footnote{per motivi di spazio si è scelto di mostrare solo 3 cifre decimali, durante
+lo studio si è usata una precisione fino a 7 cifre dopo il punto} dei primi $6$ samples per il
+file\\\texttt{mintime-28-09-2024\_18-12.csv} per il circuito di Spa:
+\begin{lstlisting}
+# s_m: distanza in metri della traiettoria
+# x_m, y_m: posizione del sample nel frame della mappa
+# psi_rad: orientamento del veicolo rispetto alla mappa
+# kappa_radpm: curvatura per quel punto in rad/m
+# vx_mps: velocita' in m/s
+# ax_mps2: accelerazione in m/s^2
+
+# s_m; x_m; y_m; psi_rad; kappa_radpm; vx_mps; ax_mps2
+0.000,11.148,-65.899,-0.370,0.032,10.236,-1.072
+0.149,11.202,-65.759,-0.365,0.032,10.220,-1.070
+0.299,11.256,-65.618,-0.360,0.032,10.204,-1.068
+0.449,11.308,-65.477,-0.355,0.032,10.189,-1.067
+0.599,11.360,-65.336,-0.350,0.032,10.173,-1.065
+0.749,11.412,-65.194,-0.345,0.032,10.157,-1.064
+\end{lstlisting}
+A fini di una migliore gestione, si è deciso di salvare il file di configurazione dei parametri e
+l'output prodotto dallo script solutore e organizzarli in directory con data e ora dell'esecuzione; in
+questo modo è stata facilitata la fase di tuning e la successiva analisi dei tracciati.
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=0.75\textwidth]{stepsize.png}
+		\includegraphics[width=0.72\textwidth]{stepsize.png}
 	\end{center}
 	\caption{Quattro traiettorie con stepsize diversi: nera a 1.5m, rossa a 0.5m,
 	arancione a 0.3m e azzurra a 0.15m}

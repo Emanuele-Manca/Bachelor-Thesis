@@ -15,7 +15,7 @@
 \usepackage{nicefrac}
 \usepackage{caption}
 \usepackage{subcaption}
-
+\usepackage[bottom]{footmisc}
 \usepackage{amsmath} % per ora utile per le frecce dei vettori in matematichese
 
 \usepackage[backend=biber]{biblatex} % bibliografia
@@ -81,10 +81,10 @@
 % =========================================
 \begin{document}
 \makefrontpage
-% \tableofcontents
-% \beforepreface
+\newgeometry{top=2cm,bottom=2cm}
+\beforepreface
 \afterpreface
-\newpage
+\restoregeometry
 
 % Chapter 1
 \include{chapters/introduzione.tex}
@@ -98,6 +98,8 @@
 \include{chapters/analisi.tex}
 % Chapter 6
 \include{chapters/conclusioni.tex}
+
+\include{ringraziamenti.tex}
 
 \raggedright
 % thanks to https://web.archive.org/web/20241003144042/https://old.reddit.com/r/LaTeX/comments/1bdqmf0/include_bibliography_in_toc_and_change_name_of/kuour1c/
