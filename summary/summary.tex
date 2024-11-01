@@ -1,0 +1,63 @@
+\documentclass[12pt,a4paper]{article}
+
+% =============== PACKAGES =================
+% \usepackage{hyperref} % per i link e riferimenti
+\usepackage[italian]{babel} % utile per suddividere le parole quando si va a capo
+\usepackage{geometry} % geometria della pagina
+\usepackage[a-1b]{pdfx}
+
+% =============== GENERAL SETTINGS =========
+\geometry{a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm}
+% \renewcommand{\baselinestretch}{1.3} % intelinea
+
+\title{\textbf{Strategie di Raceline Optimization\\in F1TENTH Autonomous Racing}}
+\author{Emanuele Manca, Matr. 978785}
+\date{}
+
+% =============== DOCUMENT =================
+\begin{document}
+\maketitle
+\noindent L'argomento di tesi trattato è l'ottimizzazione della traiettoria di gara nel contesto di gare
+automobilistiche di robot, nello specifico caso di F1TENTH; quest'ultima è una community di appassionati
+e ricercatori nell'ambito della robotica che promuove lo sviluppo di robot autonomi e organizza gare
+internazionali di robot da corsa.
+
+La tesi si concentra sul \textit{pianificare} un percorso ottimale -- secondo criteri scelti -- che
+prende in considerazione l'intero circuito; la traiettoria generata deve rimanere nei limiti fisici del
+veicolo ed evitare che lo stesso vada a scontrarsi con i bordi del circuito. L'auto a guida autonoma
+utilizzerà questa traiettoria come riferimento poi durante la gara, al fine di completare un giro. Il suo
+obiettivo sarà quindi cercare di attuare la traiettoria sviluppata durante questo lavoro.
+
+\bigskip
+\noindent L'obiettivo della tesi è stato lo studio e l'analisi di tre diversi criteri di ottimalità per
+la generazione di un percorso pianificato: il percorso \textit{più breve}, il percorso con la
+\textit{curvatura minima} e il percorso col \textit{minor tempo} sul giro.
+
+Inizialmente è stato effettuato uno studio di ROS, delle nozioni significative alla base della guida
+autonoma, della piattaforma di F1TENTH e, infine, delle soluzioni in letteratura per il global
+planning.
+
+Prima della sperimentazione è stata necessaria una configurazione dell'ambiente di sviluppo dove è stata
+implementata, utilizzando delle configurazioni e delle librerie fornite dalla community F1TENTH,
+l'infrastruttura necessaria nel sviluppare un veicolo per l'autonomous racing funzionante e comprensiva
+di ogni suo modulo. I metodi per il planning di traiettorie ottimali studiati durante questo lavoro di
+tesi sono stati sviluppati generando degli input specifici per i circuiti scelti -- \textit{le
+centerline} -- con l'uso di tecniche per l'elaborazione di immagini. La centerline è quel tracciato,
+equidistante dai bordi del circuito, da cui il risolutore inizia l'ottimizzazione. 
+
+A questo punto, sono state effettuate sperimentazioni per raffinare i parametri degli algoritmi coinvolti
+(\textit{tuning}) e sono state apportate modifiche al codice per lo scopo della tesi e per una migliore
+organizzazione.
+
+Dopo di che sono state raccolte diverse raceline per ogni strategia di ottimizzazione e, con l'uso di
+Jupyter Notebook, sono state confrontate e analizzate tra loro secondo alcune metriche (es: lap time,
+velocità, lunghezza). Infine, sono stati generati grafici e immagini delle raceline e delle loro proprietà
+sul circuito.
+
+\bigskip
+\noindent Dall'analisi è emerso come la modellazione matematica dei problemi in programmazione quadratica
+della strategia del percorso minimo e della minima curvatura produca risultati difficilmente applicabili
+ad un veicolo robotico; potrebbero essere migliorati applicando alcune variazioni ai parametri e
+integrando ulteriori vincoli sulla dinamica del veicolo. Mentre la strategia del tempo minimo è risultata
+più realistica perchè integra nella modellazione l'attrito degli pneumatici con il terreno.
+\end{document}

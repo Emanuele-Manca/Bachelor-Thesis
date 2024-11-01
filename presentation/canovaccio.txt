@@ -1,0 +1,105 @@
+============= Slide 0 =============
+Buongiorno, sono Emanuele Manca
+============= Slide 1 =============
+Il contesto in cui la mia tesi si sviluppa è quello della guida autonoma di robot, nello
+specifico delle corse autonome di robot e utilizzando l'infrastruttura software di
+F1TENTH, che è una communità dedita nella ricerca di questo settore.
+============= Slide 2 =============
+Un problema in questo contesto è quello di generare delle traiettorie che il robot deve
+seguire. Esistono però diversi criteri per generarle, e infatti l'obiettivo della mia tesi
+è stato quello di analizzare i percorsi e la velocità che il robot dovrebbe seguire, quelle
+che chiamerò raceline, all'interno di un circuito chiuso, come quelli di formula 1 ma in
+scala 1:10. I criteri di ottimizzazione scelti sono stati:
+	- il percorso più breve nel circuito
+	- quello col il minor tempo, che è quello più interessante
+	- e quello con la minor curvatura
+============= Slide 3 =============
+In letteratura si trovano diversi approcci alla risoluzione di questo problema, infatti
+per i criteri di mincurv e shortest path è prassi che vengano risolti dividendo il
+problema in due sottoproblemi: si ha prima la pianificacazione del percorso, il path
+planning, e successivamente viene pianificata la velocità per ogni punto del percorso
+calcolato. 
+Il primo passo viene risolto attraverso l'uso della programmazione quadratica geometrica,
+che viene dal mondo dell'ottimizzazione matematica e ha il vantaggio di essere semplice e
+compotazionalmente veloce, mentre per il secondo viene usato un algoritmo 
+forward-backward, ovvero che trova la velocità aumentandola o diminuendola in modo che
+rientri nei limiti.
+
+Questo metodo funziona bene per criteri di ottimizzazione della geometria del percorso,
+quindi per il percorso minimo e per la curvatura minima, mentre per il tempo minimo questi
+due sottoproblemi devono essere risolti contemporaneamente perchè strettamente legati
+l'uno all'altro, per questo motivo vengono usati algortimi dal campo del controllo
+ottimale.
+============= Slide 4 =============
+Ora andiamo ad analizzare i passaggi seguiti e come viene prodotto un tracciato:
+	- come prima cosa sono stati scelti i circuiti, in questa tesi sono stati usati i
+	  circuiti di monza e spa-francoRshamp
+	- sono state poi generate le centerline, vedremo nel dettaglio nella slide successiva
+	- è stato effettivamente calcolato il tracciato, la raceline
+	- infine sono stati analizzati i dati raccolti
+============= Slide 5 =============
+La centerline è un input necessario all'algoritmo di ottimizzazione, e viene usato come
+punto di partenza per ottimizzare. Come indica il nome, è quella linea che si trova
+esattamente al centro del circuito ed è stata trovata utilizzando un particolare algoritmo
+che viene dal mondo dell'elaborazione delle immagini, l'EDT. Molto semplicemente calcola
+la distanza euclidea dallo sfondo di una immagine. Con l'immagine opportuna, il risultato
+è quello in alto a destra, da cui si estraggono i singoli pixel bianchi, ovvero quelli più
+"distanti" e quindi si ricava l'immagine sotto, ovvero la centerline
+============= Slide 6 =============
+Questi tipi di algoritmi di ottimizzazione spesso necessitano di una fase di tuning,
+ovvero è necessario trovare dei valori dei parametri tali che l'algoritmo produca un
+risultato utilizzabile. Il parametro principale che determina la qualità dell'output è lo
+stepsize, ovvero la distanza di campionamento del percorso. Essendo il percorso una linea
+continua, un calcolatore deve necessariamente discretizzarla, campionando quelli che
+vengono chiamati sample distanziati da una certa distanza di stepsize. Nell'immagine si
+mostrano diverse raceline con stepsize di grandezza diversa. Ovviamente con sample più vicini
+si otterrà un risultato più fedele.
+============= Slide 7 =============
+Veniamo ora alla parte di analisi dei risultati.
+Allora, sono state generate tre raceline per i tre criteri scelti e per ogni mappa, quindi
+monza e spa. Le metriche utilizzate sono state quelle scritte, oltre a quelle, ho inserito
+il tempo di esecuzione degli algoritmi rispetto al valore di stepsize. Come si può vedere
+dal grafico e, come anche facilmente intuibile, all'aumentare del valore degli stepsize
+diminiusce in modo significativo il tempo di computazione, infatti la scala sul'asse delle
+y è logaritmica. Come si può notare, i pallini blu, che rappresentano il tempo minimo,
+sono completamente fuori scala rispetto agli altri due, mincurv e shortest path proprio
+per via dell'algoritmo più complesso.
+============= Slide 8 =============
+Qua si analizza il circuito di Monza, ho ingrandito alcune parti interessanti per far
+notare le differenze dei tracciati:
+si nota come, in generale, mintime e mincurv producano tracciati simili se non per
+alcuni punti; mentre shortest path può uscire anche fuori dal circuito,
+per via di stepsize troppo ampi. Questo significa che i diversi approcci hanno sensibilità
+diverse in base allo stepsize; qua sono state generate tutte e tre con uno stepsize di
+1.5m, eppure solo shortest path presenta queste anomalie, dunque ha bisogno di uno
+stepsize più piccolo, mentre mintime e mincurv no.
+
+Guardando alcuni dati si nota immediatamente come il lap time maggiore di tutti sia,
+controintuitivamente, quello del tempo minimo, ma questo è dato dalla formulazione
+matematica del modello che include l'attrito degli pneumatici col terreno rendendo i
+risultati più realistici. Mentre per la lunghezza del percorso il minore è lo shotest path
+============= Slide 9 =============
+Se geometricamente parlando le raceline mintime e mincurv sono simili, non si può dire lo
+stesso per il profilo della velocità. Come si nota la velocità mediana di mintime è
+nettamente inferiore rispetto a quella di mincurv, questo è dato dalla formulazione, come
+detto prima, e da sperimentazioni fatte col simulatore è risultata anche più realistica.
+Infatti è difficile immaginare un robottino grande quanto circa un foglio a4 raggiungere
+la velocità massima, qua impostata a 15 m/s.
+Anche in questo caso si trovano delle sensibilità diverse per il parametro della velocità
+massima che in questo caso mincurv raggiunge molte più volte mantenendolo per più tempo.
+============= Slide 10 =============
+Anche per spa si possono fare le stesse considerazioni. In basso a sinistra si nota una
+importante differenza dei tracciati, quello di shortest path è un
+percorso difficilmente percorribile da un veicolo, oltre al fatto che taglia la curva,
+risulta essere troppo vicino ai bordi.
+Shortest path quindi è molto più sensibile al parametro del distanziamento dai bordi
+rispetto agli altri due.
+============= Slide 11 =============
+Anche in questo caso valgono le stesse considerazioni. si nota come mincurv mantenga la
+velocità massima in molti più punti rispetto agli altri due, e anche questo riduce
+l'effettiva applicabilità.
+
+============= Slide 12 =============
+In conclusione, come anche accennato precedentemente, mintime produce un risultato più
+realistico principalmente perchè ha una formulazione più dettagliata.
+
